@@ -47,7 +47,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodedUITestProject1", "Code
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WordObjLearning", "WordObjLearning\WordObjLearning.csproj", "{F17C29B3-5888-4EC8-A4C3-EAF1F63CED0F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remoting", "Remoting\Remoting.csproj", "{B037BDA8-8CDC-48FB-A44E-19A1C73CCAC3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemotingClient", "Remoting\RemotingClient.csproj", "{B037BDA8-8CDC-48FB-A44E-19A1C73CCAC3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemotingServer", "RemotingServer\RemotingServer.csproj", "{65584EB3-C3DA-4948-AC68-8CB7A9CD2AA8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemotingLib", "RemotingLib\RemotingLib.csproj", "{E9B55577-374E-4C7C-A632-9BB7E725CB4A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -135,6 +139,14 @@ Global
 		{B037BDA8-8CDC-48FB-A44E-19A1C73CCAC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B037BDA8-8CDC-48FB-A44E-19A1C73CCAC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B037BDA8-8CDC-48FB-A44E-19A1C73CCAC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65584EB3-C3DA-4948-AC68-8CB7A9CD2AA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65584EB3-C3DA-4948-AC68-8CB7A9CD2AA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65584EB3-C3DA-4948-AC68-8CB7A9CD2AA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65584EB3-C3DA-4948-AC68-8CB7A9CD2AA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9B55577-374E-4C7C-A632-9BB7E725CB4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9B55577-374E-4C7C-A632-9BB7E725CB4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9B55577-374E-4C7C-A632-9BB7E725CB4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9B55577-374E-4C7C-A632-9BB7E725CB4A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

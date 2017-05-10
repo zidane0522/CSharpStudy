@@ -55,7 +55,7 @@ namespace WordObjLearning
             string strContent;
             Word.Application wordApp;
             Word.Document wordDoc;
-            path = @"D:\MyWord.docx";
+            path = @"D:\MyWord.pdf";
             wordApp = new Word.ApplicationClass();
             if (File.Exists((string)path))
             {
@@ -72,12 +72,14 @@ namespace WordObjLearning
                     table.Cell(i, j).Range.Text = "第" + i + "行，第" + j + "列";
                 }
             }
-            object format = Word.WdSaveFormat.wdFormatDocumentDefault;
+            object format = Word.WdSaveFormat.wdFormatPDF;
             //wordDoc.SaveAsQuickStyleSet((string)path);
             wordDoc.SaveAs2(ref path,ref format,ref Nothing,ref Nothing,ref Nothing,ref Nothing,ref Nothing,false,ref Nothing,ref Nothing,ref Nothing,ref Nothing,ref Nothing,ref Nothing,ref Nothing,ref Nothing,ref Nothing);
-            wordDoc.Close(ref Nothing, ref Nothing, ref Nothing);
+            wordDoc.Close(false, ref Nothing, ref Nothing);
             wordApp.Quit(ref Nothing, ref Nothing, ref Nothing);
             Console.WriteLine(path+"创建完毕！");
+
+            //wordDoc.sa
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -112,5 +114,7 @@ namespace WordObjLearning
             wordApp.Quit(ref Nothing, ref Nothing, ref Nothing);
             Console.WriteLine(path + "创建完毕！");
         }
+
+
     }
 }

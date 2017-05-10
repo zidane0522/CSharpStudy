@@ -47,6 +47,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodedUITestProject1", "Code
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WordObjLearning", "WordObjLearning\WordObjLearning.csproj", "{F17C29B3-5888-4EC8-A4C3-EAF1F63CED0F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remoting", "Remoting\Remoting.csproj", "{B037BDA8-8CDC-48FB-A44E-19A1C73CCAC3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -129,6 +131,10 @@ Global
 		{F17C29B3-5888-4EC8-A4C3-EAF1F63CED0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F17C29B3-5888-4EC8-A4C3-EAF1F63CED0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F17C29B3-5888-4EC8-A4C3-EAF1F63CED0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B037BDA8-8CDC-48FB-A44E-19A1C73CCAC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B037BDA8-8CDC-48FB-A44E-19A1C73CCAC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B037BDA8-8CDC-48FB-A44E-19A1C73CCAC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B037BDA8-8CDC-48FB-A44E-19A1C73CCAC3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

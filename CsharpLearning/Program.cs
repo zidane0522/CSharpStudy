@@ -107,10 +107,25 @@ namespace CsharpLearning
             //}
             //string fdf = dds.Replace("图形", " 图形 ");
             //string dsfdsf = fdf.Trim();
-            DateTime dd = DateTime.Now.Date;
-            DateTime ww = DateTime.Now.AddDays(5).Date;
-            int dsf = ww.Subtract(dd).Days;
-            Console.ReadKey();
+            //DateTime dd = DateTime.Now.Date;
+            //DateTime ww = DateTime.Now.AddDays(5).Date;
+            //int dsf = ww.Subtract(dd).Days;
+            //Console.ReadKey();
+            while (true)
+            {
+                Task.Factory.StartNew(() => {
+                    for (int i = 0; i < 3605000; i++)
+                    {
+
+                    }
+                    //Thread.Sleep(10);
+                });
+                for (int i = 0; i < 3605000; i++)
+                {
+
+                }
+                //Thread.Sleep(10);
+            }
         }
     }
 }

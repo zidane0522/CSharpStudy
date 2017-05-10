@@ -18,8 +18,8 @@ namespace CsharpLearning
 
     public class CarDealer
     {
+        public delegate void EventHandler<CarInfoEventArgs> newCarInfo(object sender,CarInfoEventArgs e);
         public event EventHandler<CarInfoEventArgs> NewCarInfo;
-
         public void NewCar(string car)
         {
             Console.WriteLine("CarDealer,new car{0}", car);
@@ -40,10 +40,12 @@ namespace CsharpLearning
 
     public class Consumer
     {
+
         private string name;
         public Consumer(string name)
         {
             this.name = name;
+            
         }
 
         public void NewCarIsHere(object sender, CarInfoEventArgs e)
@@ -51,4 +53,6 @@ namespace CsharpLearning
             Console.WriteLine("{0}:car {1} is new", name, e.Car);
         }
     }
+
+
 }

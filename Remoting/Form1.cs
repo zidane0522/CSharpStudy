@@ -18,7 +18,25 @@ namespace Remoting
         public Form1()
         {
             InitializeComponent();
+            //ClientActivated();
+            //ServerSingleton();
+            ServerSingleCall();
+
+            RunTest("CAO1");
+            RunTest("CAO2");
         }
+
+        private static void RunTest(string objectName)
+        {
+            DemoClass obj = new DemoClass();
+            obj.ShowAppDomain();
+            obj.ShowCount(objectName);
+            Console.WriteLine("{0},the count is {1}.", objectName, obj.GetCount());
+            obj.ShowCount(objectName);
+            Console.WriteLine("{0},the count is {1}.", objectName, obj.GetCount());
+        }
+
+
 
         /// <summary>
         /// 注册客户端激活
@@ -26,7 +44,7 @@ namespace Remoting
         private static void ClientActivated()
         {
             Type t = typeof(DemoClass);
-            string url = "tcp://127.0.0.1:8051";
+            string url = "tcp://127.0.0.1:8501";
             RemotingConfiguration.RegisterActivatedClientType(t,url);
         }
 

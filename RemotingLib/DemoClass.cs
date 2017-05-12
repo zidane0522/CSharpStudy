@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RemotingSharedLib;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RemotingLib
 {
-    public class DemoClass:MarshalByRefObject//封送
+    public class DemoClass : MarshalByRefObject,IDemoClass//封送
     {
         private int count = 0;
         public DemoClass()//追踪远程对象创建的时机
@@ -26,7 +27,14 @@ namespace RemotingLib
             Console.WriteLine(currentDomain.FriendlyName);
         }
 
+        public DemoCount GetNewCount()
+        {
+            return new DemoCount(count);
+        }
+
         public int GetCount()//获取远程对象的返回值
         { return count; }
     }
+
+ 
 }

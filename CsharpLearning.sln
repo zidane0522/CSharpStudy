@@ -53,6 +53,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemotingServer", "RemotingS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemotingLib", "RemotingLib\RemotingLib.csproj", "{E9B55577-374E-4C7C-A632-9BB7E725CB4A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemotingSharedLib", "RemotingSharedLib\RemotingSharedLib.csproj", "{8F5179E9-3349-4E7D-86F0-CE93D5403759}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -147,6 +149,10 @@ Global
 		{E9B55577-374E-4C7C-A632-9BB7E725CB4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E9B55577-374E-4C7C-A632-9BB7E725CB4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E9B55577-374E-4C7C-A632-9BB7E725CB4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F5179E9-3349-4E7D-86F0-CE93D5403759}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F5179E9-3349-4E7D-86F0-CE93D5403759}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F5179E9-3349-4E7D-86F0-CE93D5403759}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F5179E9-3349-4E7D-86F0-CE93D5403759}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

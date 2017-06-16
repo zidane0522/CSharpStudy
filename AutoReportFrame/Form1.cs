@@ -15,6 +15,7 @@ namespace AutoReportFrame
         public Form1()
         {
             InitializeComponent();
+            this.webBrowser1.Url = new Uri("http://sbj.saic.gov.cn/");
         }
     }
 }

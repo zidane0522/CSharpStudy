@@ -43,8 +43,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "asyncWin", "asyncWin\asyncW
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject1", "UnitTestProject1\UnitTestProject1.csproj", "{995B9D06-FC9A-45E6-B948-C234CC7107AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodedUITestProject1", "CodedUITestProject1\CodedUITestProject1.csproj", "{EBE18FCE-033C-4582-BD1A-0AC6158C5A45}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WordObjLearning", "WordObjLearning\WordObjLearning.csproj", "{F17C29B3-5888-4EC8-A4C3-EAF1F63CED0F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemotingClient", "Remoting\RemotingClient.csproj", "{B037BDA8-8CDC-48FB-A44E-19A1C73CCAC3}"
@@ -135,10 +133,6 @@ Global
 		{995B9D06-FC9A-45E6-B948-C234CC7107AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{995B9D06-FC9A-45E6-B948-C234CC7107AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{995B9D06-FC9A-45E6-B948-C234CC7107AF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EBE18FCE-033C-4582-BD1A-0AC6158C5A45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EBE18FCE-033C-4582-BD1A-0AC6158C5A45}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EBE18FCE-033C-4582-BD1A-0AC6158C5A45}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EBE18FCE-033C-4582-BD1A-0AC6158C5A45}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F17C29B3-5888-4EC8-A4C3-EAF1F63CED0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F17C29B3-5888-4EC8-A4C3-EAF1F63CED0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F17C29B3-5888-4EC8-A4C3-EAF1F63CED0F}.Release|Any CPU.ActiveCfg = Release|Any CPU

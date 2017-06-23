@@ -31,13 +31,6 @@ namespace AutoReportFrame
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //doc = webBrowser1.Document;
-            ////ele = doc.GetElementById("codefans_net").FirstChild ;
-            ////object ddd= ele.InvokeMember("onclick");
-            //object obj = "/tmsve/commonGoods_getIntCls.xhtml";
-            //doc.InvokeScript("popUpWindow",new object[] { "/tmsve/commonGoods_getIntCls.xhtml" });
-            ////popUpWindow('/tmsve/commonGoods_getIntCls.xhtml')
-
             this.webBrowser1.Navigate("http://wssq.saic.gov.cn:9080/tmsve/sbzcsq_getSbzcMain.xhtml");
         }
 
@@ -73,6 +66,23 @@ namespace AutoReportFrame
             }
     
 
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            IHTMLDocument2 hdoc = doc.DomDocument as IHTMLDocument2;
+            IHTMLWindow2 win = hdoc.parentWindow as mshtml.IHTMLWindow2;
+            var d= win.execScript(@"function sucdd(){ return popUpWin;}", "javascript");
+            HTMLWindow2Class dddd = doc.InvokeScript("sucdd") as HTMLWindow2Class;
+            IHTMLDocument2 popupdoc = dddd.document;
+            IHTMLElementCollection elelist = popupdoc.all;
+            foreach (IHTMLElement item in elelist)
+            {
+                //if (item.)
+                //{
+
+                //}
+            }
         }
     }
 }

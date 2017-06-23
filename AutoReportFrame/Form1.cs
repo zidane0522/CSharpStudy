@@ -37,8 +37,20 @@ namespace AutoReportFrame
             IHTMLWindow2 win = hdoc.parentWindow as mshtml.IHTMLWindow2;
             var d = win.execScript(@"function sucdd(){ return popUpWin;}", "javascript");
             HTMLWindow2Class dddd = doc.InvokeScript("sucdd") as HTMLWindow2Class;
-            HTMLDocumentClass popupdoc = dddd.document as HTMLDocumentClass;
-            var dsfdsf = popupdoc.embeds;
+            IHTMLDocument2 popupdoc = dddd.document;
+            IHTMLElementCollection eleclt= popupdoc.all.tags("span") as IHTMLElementCollection;
+            foreach (IHTMLElement item in eleclt)
+            {
+                if (item.innerText!=null)
+                {
+                    if (item.innerText.Contains("问题十四"))
+                    {
+                        item.click();
+                    }
+                }
+               
+            }
+            //IHTMLElement ele=eleclt.item
         }
     }
 }

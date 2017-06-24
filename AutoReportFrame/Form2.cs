@@ -70,18 +70,43 @@ namespace AutoReportFrame
 
         private void button3_Click(object sender, EventArgs e)
         {
-            IHTMLDocument2 hdoc = doc.DomDocument as IHTMLDocument2;
-            IHTMLWindow2 win = hdoc.parentWindow as mshtml.IHTMLWindow2;
-            var d= win.execScript(@"function sucdd(){ return popUpWin;}", "javascript");
-            HTMLWindow2Class dddd = doc.InvokeScript("sucdd") as HTMLWindow2Class;
-            IHTMLDocument2 popupdoc = dddd.document;
-            IHTMLElementCollection elelist = popupdoc.all;
-            foreach (IHTMLElement item in elelist)
+            try
             {
-                //if (item.)
-                //{
+                //获取弹出窗口对象信息
+                IHTMLDocument2 hdoc = doc.DomDocument as IHTMLDocument2;
+                IHTMLWindow2 win = hdoc.parentWindow as mshtml.IHTMLWindow2;
+                var d = win.execScript(@"function sucdd(){ return popUpWin;}", "javascript");
+                HTMLWindow2Class dddd = doc.InvokeScript("sucdd") as HTMLWindow2Class;
+                IHTMLDocument2 popupdoc = dddd.document;
+                IHTMLElementCollection elelist = popupdoc.all.tags("table") as IHTMLElementCollection;
+                IHTMLElement table_ele;
 
-                //}
+                //获取table节点信息
+                table_ele = elelist.item(null, elelist.length - 1) as IHTMLElement;
+
+                //获取td列表
+
+                IHTMLElementCollection trlist = (table_ele.document as IHTMLDocument2).all.tags("tr") as IHTMLElementCollection;
+                //IHTMLElementCollection trlist11 = ;
+                var a = ((table_ele.all as IHTMLElementCollection).tags("tr") as IHTMLElementCollection).length;
+                var c = (table_ele.children as IHTMLElementCollection).length;
+
+                //外科胶水，药枕，产包，药棉
+                IHTMLElement ele1, ele2;
+                //匹配小项节点
+                foreach (IHTMLElement item in trlist)
+                {
+                    IHTMLElementCollection tdlist = (item.document as IHTMLDocument2).all.tags("td") as IHTMLElementCollection;
+                    if (tdlist.length == 3)
+                    {
+                        ele1 = tdlist.item(null, 0) as IHTMLElement;
+                        ele2 = tdlist.item(null, 2) as IHTMLElement;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
             }
         }
     }

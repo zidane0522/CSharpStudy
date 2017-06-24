@@ -76,33 +76,66 @@ namespace AutoReportFrame
                 IHTMLDocument2 hdoc = doc.DomDocument as IHTMLDocument2;
                 IHTMLWindow2 win = hdoc.parentWindow as mshtml.IHTMLWindow2;
                 var d = win.execScript(@"function sucdd(){ return popUpWin;}", "javascript");
+                
                 HTMLWindow2Class dddd = doc.InvokeScript("sucdd") as HTMLWindow2Class;
+        
                 IHTMLDocument2 popupdoc = dddd.document;
+                win = popupdoc.parentWindow as IHTMLWindow2;
+                string s = @"function confirm() {";
+                s += @"return true;";
+                s += @"}";
+                s += @"function alert() {}";
+                win.execScript(s, "javascript");
                 IHTMLElementCollection elelist = popupdoc.all.tags("table") as IHTMLElementCollection;
-                IHTMLElement table_ele;
+                IHTMLElement table_ele=null;
 
-                //获取table节点信息
-                table_ele = elelist.item(null, elelist.length - 1) as IHTMLElement;
-
-                //获取td列表
-
-                IHTMLElementCollection trlist = (table_ele.document as IHTMLDocument2).all.tags("tr") as IHTMLElementCollection;
-                //IHTMLElementCollection trlist11 = ;
-                var a = ((table_ele.all as IHTMLElementCollection).tags("tr") as IHTMLElementCollection).length;
-                var c = (table_ele.children as IHTMLElementCollection).length;
-
-                //外科胶水，药枕，产包，药棉
-                IHTMLElement ele1, ele2;
-                //匹配小项节点
-                foreach (IHTMLElement item in trlist)
+                foreach (var item in elelist)
                 {
-                    IHTMLElementCollection tdlist = (item.document as IHTMLDocument2).all.tags("td") as IHTMLElementCollection;
-                    if (tdlist.length == 3)
-                    {
-                        ele1 = tdlist.item(null, 0) as IHTMLElement;
-                        ele2 = tdlist.item(null, 2) as IHTMLElement;
-                    }
+                    table_ele = item as IHTMLElement;
                 }
+
+                string[] pararray =new string[]{ "外科胶水","药枕","产包","药棉" };
+
+                if (table_ele!=null)
+                {
+                    //获取td列表
+
+                    IHTMLElementCollection trlist = (table_ele.all as IHTMLElementCollection).tags("tr") as IHTMLElementCollection;
+
+                    //外科胶水，药枕，产包，药棉
+                    IHTMLElement ele1=null, ele2=null;
+                    //匹配小项节点
+                    foreach (IHTMLElement item in trlist)
+                    {
+                        IHTMLElementCollection tdlist = (item.all as IHTMLElementCollection).tags("td") as IHTMLElementCollection;
+                        if (tdlist.length == 3)
+                        {
+
+                            ele1 = tdlist.item(null, 0) as IHTMLElement;
+                            int i = 0;
+                            foreach (IHTMLElement trele in tdlist)
+                            {
+                                if (i == 0)
+                                {
+                                    ele1 = trele;
+                                }
+                                if (i == 2)
+                                {
+                                    ele2 = trele;
+                                }
+                                i++;
+                            }
+                            if (pararray.Contains(ele2.innerText.ToString().Trim()))
+                            {
+                                IHTMLElement inputele = (ele1.children as IHTMLElementCollection).item(null, 0) as IHTMLElement;
+                                inputele.setAttribute("checked", true);
+                            }
+                        }
+                    }
+                    IHTMLElement submitlist = popupdoc.all.item("b1", 0) as IHTMLElement;
+                    submitlist.click();
+                }
+
             }
             catch (Exception ex)
             {

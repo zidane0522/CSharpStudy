@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Dapper;
 
 namespace AutoReportFrame
 {
@@ -18,6 +19,8 @@ namespace AutoReportFrame
             InitializeComponent();
             this.webBrowser1.Url = new Uri("http://wssq.saic.gov.cn:9080/tmsve/");
         }
+
+
         public HtmlDocument doc { get; set; }
 
         public HtmlElement ele { get; set; }

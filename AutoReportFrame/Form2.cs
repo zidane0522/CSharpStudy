@@ -18,6 +18,32 @@ namespace AutoReportFrame
             InitializeComponent();
             this.webBrowser1.Url = new Uri("http://wssq.saic.gov.cn:9080/tmsve/");
             this.FormClosing += Form2_FormClosing;
+            this.webBrowser1.DocumentCompleted += WebBrowser1_DocumentCompleted;
+
+        }
+        private bool loginneed = true;
+        private void WebBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        {
+            if (loginneed)
+            {
+                doc = webBrowser1.Document;
+                AutoLogin();
+                loginneed = false;
+            }        
+        }
+
+        private void AutoLogin()
+        {
+            try
+            {
+                HtmlElement pinele = doc.GetElementById("pin");
+                HtmlElement loginele = doc.GetElementById("pinword");
+                pinele.SetAttribute("value", "112233");
+                loginele.InvokeMember("click");
+            }
+            catch (Exception ex)
+            {
+            }             
         }
 
         private void Form2_FormClosing(object sender, FormClosingEventArgs e)
@@ -141,6 +167,12 @@ namespace AutoReportFrame
             {
 
             }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            tm_loc_info_View tliv = new tm_loc_info_View();
+            tliv.ShowDialog();
         }
     }
 }

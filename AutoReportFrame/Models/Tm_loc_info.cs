@@ -14,9 +14,11 @@ namespace AutoReportFrame.Models
 
         public string Phone { get; set; }
 
-        public string TmIctm { get; set; }
+        public int TmIctm { get; set; }
 
-        public string TmItem { get; set; }
+        public string TmId { get; set; }
+
+        public string TmNum { get; set; }
     }
 
     public class TmGroupInfo

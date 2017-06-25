@@ -174,5 +174,10 @@ namespace AutoReportFrame
             tm_loc_info_View tliv = new tm_loc_info_View();
             tliv.ShowDialog();
         }
+
+        private void webBrowser1_DocumentCompleted_1(object sender, WebBrowserDocumentCompletedEventArgs e)
+        {
+
+        }
     }
 }

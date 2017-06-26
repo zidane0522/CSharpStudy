@@ -1,4 +1,6 @@
-﻿using mshtml;
+﻿using AutoReportFrame.Models;
+using mshtml;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -6,6 +8,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -19,92 +22,93 @@ namespace AutoReportFrame
             this.webBrowser1.Url = new Uri("http://wssq.saic.gov.cn:9080/tmsve/");
             this.FormClosing += Form2_FormClosing;
             this.webBrowser1.DocumentCompleted += WebBrowser1_DocumentCompleted;
-
+            tm_loc_info_View.OnSelectTmLocInfo += Tm_loc_info_View_OnSelectTmLocInfo;
         }
-        private bool loginneed = true;
-        private void WebBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        private int _waitSpan = 2000;
+        public Models.Tm_loc_info Tm_loc_info { get; set; }
+
+        public List<GroupInfo> GroupInfoList { get; set; }
+
+        public int ItemCount { get; set; }
+
+        public int AutoSelectItemCount { get; set; }
+
+        private void Tm_loc_info_View_OnSelectTmLocInfo(Models.Tm_loc_info tm_loc_info)
         {
-            if (loginneed)
-            {
-                doc = webBrowser1.Document;
-                AutoLogin();
-                loginneed = false;
-            }        
+            this.Tm_loc_info = tm_loc_info;
+            this.label2_applicant.Text = tm_loc_info.Applicant;
+            this.label3_tmName.Text = tm_loc_info.TmName;
+            this.label5_ictm.Text = tm_loc_info.TmIctm.ToString();
+            this.label3_tmNum.Text = tm_loc_info.TmNum;
+            AutoWriteTmNum();
+            GetGroupInfoList();
+            AutoSelectItem();
         }
 
-        private void AutoLogin()
+        private void AutoWriteTmNum()
         {
-            try
+            HtmlElement ele = doc.GetElementById("agentFilenum");
+            ele.SetAttribute("value",this.Tm_loc_info.TmNum);
+        }
+
+        private void GetGroupInfoList()
+        {
+            int itemCount = 0;
+            GroupInfoList = new List<Models.GroupInfo>();
+            var res = JObject.Parse(CommonLibrary.CommonTool.GetResult(string.Format("http://localhost:3153/api/AutoReport/GroupInfoList?tmId={0}&ictm={1}",this.Tm_loc_info.TmId,this.Tm_loc_info.TmIctm.ToString())));
+            if (res["error"].ToString()=="")
             {
-                HtmlElement pinele = doc.GetElementById("pin");
-                HtmlElement loginele = doc.GetElementById("pinword");
-                pinele.SetAttribute("value", "112233");
-                loginele.InvokeMember("click");
+                foreach (var groupInfo in res["groupList"])
+                {
+                    GroupInfo gi = new Models.GroupInfo();
+                    gi.GroupId = groupInfo["GroupId"].ToString();
+                    gi.ItemList = new List<string>();
+                    foreach (var item_zh in groupInfo["ItemList"])
+                    {
+                        itemCount++;
+                        gi.ItemList.Add(item_zh.ToString());
+                    }
+                    GroupInfoList.Add(gi);
+                }
             }
-            catch (Exception ex)
-            {
-            }             
+            this.label5_itemCount.Text = itemCount.ToString();
+            this.ItemCount = itemCount;
         }
 
-        private void Form2_FormClosing(object sender, FormClosingEventArgs e)
+        private void AutoSelectItem()
         {
-            this.webBrowser1.Dispose();
-        }
-
-        public HtmlDocument doc { get; set; }
-
-        public HtmlElement ele { get; set; }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            this.webBrowser1.Navigate("http://wssq.saic.gov.cn:9080/tmsve/sbzcsq_getSbzcMain.xhtml");
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            //if (doc!=null)
-            //{
-            //    IHTMLDocument2 hdoc =doc.DomDocument as IHTMLDocument2;
-            //    IHTMLWindow2 win = hdoc.parentWindow as mshtml.IHTMLWindow2;
-            //    var d= win.execScript(@"function sucdd(){ return popUpWin;}", "javascript");
-            //}
-            //var dddd = doc.InvokeScript("sucdd");
-            ////mshtml.htmlWindow2class
-            try
+            this.AutoSelectItemCount = 0;
+            for (int i = 0; i < GroupInfoList.Count; i++)
             {
-                doc = webBrowser1.Document;
-                //HtmlElementCollection dd = doc.GetElementsByTagName("a");
-                //foreach (HtmlElement item in dd)
-                //{
-                //    if (item.InnerText.Contains("【点击添加商品"))
-                //    {
-                //        item.InvokeMember("click");
-                //        break;
-                //    }
-                //}
-
-                object obj = "/tmsve/commonGoods_getIntCls.xhtml";
-                doc.InvokeScript("popUpWindow", new object[] { "/tmsve/commonGoods_getGoods.xhtml?code=0506&id=2CA2DB43AF7DC0A2E0537F000001C0A2" });
-            }
-            catch (Exception ex)
-            {
-
-            }
-    
-
+                PopupItemWin(GroupInfoList[i].GroupId);
+                Thread.Sleep(_waitSpan);
+                if (GroupInfoList.Count>0)
+                {
+                    if (i == (GroupInfoList.Count - 1))
+                    {
+                        SelectItem(GroupInfoList[i].ItemList.ToArray(), true);
+                    }
+                    else
+                    {
+                        SelectItem(GroupInfoList[i].ItemList.ToArray(), false);
+                    }
+                }
+         
+            }    
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void SelectItem(string[] pararray,bool isLastItem)
         {
             try
             {
                 //获取弹出窗口对象信息
                 IHTMLDocument2 hdoc = doc.DomDocument as IHTMLDocument2;
                 IHTMLWindow2 win = hdoc.parentWindow as mshtml.IHTMLWindow2;
-                var d = win.execScript(@"function sucdd(){ return popUpWin;}", "javascript");
                 
+                var d = win.execScript(@"function sucdd(){ return popUpWin;}", "javascript");
+
                 HTMLWindow2Class dddd = doc.InvokeScript("sucdd") as HTMLWindow2Class;
-        
+                
                 IHTMLDocument2 popupdoc = dddd.document;
                 win = popupdoc.parentWindow as IHTMLWindow2;
                 string s = @"function confirm() {";
@@ -113,23 +117,18 @@ namespace AutoReportFrame
                 s += @"function alert() {}";
                 win.execScript(s, "javascript");
                 IHTMLElementCollection elelist = popupdoc.all.tags("table") as IHTMLElementCollection;
-                IHTMLElement table_ele=null;
+                IHTMLElement table_ele = null;
 
                 foreach (var item in elelist)
                 {
                     table_ele = item as IHTMLElement;
                 }
 
-                string[] pararray =new string[]{ "外科胶水","药枕","产包","药棉" };
-
-                if (table_ele!=null)
+                if (table_ele != null)
                 {
                     //获取td列表
-
                     IHTMLElementCollection trlist = (table_ele.all as IHTMLElementCollection).tags("tr") as IHTMLElementCollection;
-
-                    //外科胶水，药枕，产包，药棉
-                    IHTMLElement ele1=null, ele2=null;
+                    IHTMLElement ele1 = null, ele2 = null;
                     //匹配小项节点
                     foreach (IHTMLElement item in trlist)
                     {
@@ -155,29 +154,87 @@ namespace AutoReportFrame
                             {
                                 IHTMLElement inputele = (ele1.children as IHTMLElementCollection).item(null, 0) as IHTMLElement;
                                 inputele.setAttribute("checked", true);
+                                this.AutoSelectItemCount++;
                             }
                         }
                     }
                     IHTMLElement submitlist = popupdoc.all.item("b1", 0) as IHTMLElement;
                     submitlist.click();
                 }
-
+                if (isLastItem)
+                {
+                    dddd.close();
+                    if (AutoSelectItemCount!=ItemCount)
+                    {
+                        MessageBox.Show("系统自动抓取的小项个数小于实际小项总数，请人工核对抓取，或者删除现有全部小项，并再次启动自动抓取");
+                    }
+                    else
+                    {
+                        MessageBox.Show("OK");
+                    }
+                }
             }
             catch (Exception ex)
             {
 
             }
+      
+        }
+
+        private void PopupItemWin(string groupId)
+        {
+            doc = webBrowser1.Document;
+            object obj = "/tmsve/commonGoods_getIntCls.xhtml";
+            doc.InvokeScript("popUpWindow", new object[] { string.Format("/tmsve/commonGoods_getGoods.xhtml?code={0}&id=2CA2DB43AF7DC0A2E0537F000001C0A2", groupId) });
+                   
+        }
+
+        private bool unloginneed = true;
+        // bool selectingItem = false;
+        private void WebBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        {
+            if (unloginneed)
+            {
+                doc = webBrowser1.Document;
+                AutoLogin();
+                unloginneed = false;
+            }
+        }
+
+        #region 属性
+
+        public HtmlDocument doc { get; set; }
+
+        #endregion
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            this.webBrowser1.Navigate("http://wssq.saic.gov.cn:9080/tmsve/sbzcsq_getSbzcMain.xhtml");
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
             tm_loc_info_View tliv = new tm_loc_info_View();
-            tliv.ShowDialog();
+            tliv.Show();
         }
 
-        private void webBrowser1_DocumentCompleted_1(object sender, WebBrowserDocumentCompletedEventArgs e)
+        private void AutoLogin()
         {
+            try
+            {
+                HtmlElement pinele = doc.GetElementById("pin");
+                HtmlElement loginele = doc.GetElementById("pinword");
+                pinele.SetAttribute("value", "112233");
+                loginele.InvokeMember("click");
+            }
+            catch (Exception ex)
+            {
+            }
+        }
 
+        private void Form2_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            this.webBrowser1.Dispose();
         }
     }
 }

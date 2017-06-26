@@ -21,10 +21,10 @@ namespace AutoReportFrame.Models
         public string TmNum { get; set; }
     }
 
-    public class TmGroupInfo
+    public class GroupInfo
     {
-        public string GroupID { get; set; }
+        public string GroupId { get; set; }
 
-        public List<string> ItemNameList { get; set; }
+        public List<string> ItemList { get; set; }
     }
 }

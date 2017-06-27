@@ -19,6 +19,7 @@ namespace AutoReportFrame
         public Form2()
         {
             InitializeComponent();
+            currentUrl = webUrl;
             this.webBrowser1.Url = new Uri("http://wssq.saic.gov.cn:9080/tmsve/");
             this.FormClosing += Form2_FormClosing;
             this.webBrowser1.DocumentCompleted += WebBrowser1_DocumentCompleted;
@@ -28,6 +29,12 @@ namespace AutoReportFrame
         public Models.Tm_loc_info Tm_loc_info { get; set; }
 
         public List<GroupInfo> GroupInfoList { get; set; }
+
+        private string currentUrl = "";
+
+        private string localUrl = "http://localhost:3153/";
+
+        private string webUrl = "http://api.alibiaobiao.cn/";
 
         public int ItemCount { get; set; }
 
@@ -55,7 +62,7 @@ namespace AutoReportFrame
         {
             int itemCount = 0;
             GroupInfoList = new List<Models.GroupInfo>();
-            var res = JObject.Parse(CommonLibrary.CommonTool.GetResult(string.Format("http://localhost:3153/api/AutoReport/GroupInfoList?tmId={0}&ictm={1}",this.Tm_loc_info.TmId,this.Tm_loc_info.TmIctm.ToString())));
+            var res = JObject.Parse(CommonLibrary.CommonTool.GetResult(currentUrl+string.Format("api/AutoReport/GroupInfoList?tmId={0}&ictm={1}",this.Tm_loc_info.TmId,this.Tm_loc_info.TmIctm.ToString())));
             if (res["error"].ToString()=="")
             {
                 foreach (var groupInfo in res["groupList"])
@@ -214,7 +221,7 @@ namespace AutoReportFrame
 
         private void button4_Click(object sender, EventArgs e)
         {
-            tm_loc_info_View tliv = new tm_loc_info_View();
+            tm_loc_info_View tliv = new tm_loc_info_View(currentUrl);
             tliv.Show();
         }
 

@@ -19,12 +19,16 @@ namespace AutoReportFrame
     public delegate void SelectTmLocInfo(Tm_loc_info tm_loc_info);
     public partial class tm_loc_info_View : Form
     {
-        public tm_loc_info_View()
+        public tm_loc_info_View(string url)
         {
             InitializeComponent();
+            this.currentUrl = url;
             GetTmLocInfoList();
+            pageNo = 1;
+            this.label5_pageNo.Text = "1";
         }
 
+        private string currentUrl = "";
 
         private void GetTmLocInfoList()
         {
@@ -33,7 +37,7 @@ namespace AutoReportFrame
                 //获取未被提交的一标一类信息列表
                 //http://localhost:3153/
                 List<Tm_loc_info> list = new List<Models.Tm_loc_info>();
-                var res = JObject.Parse(CommonTool.GetResult("http://localhost:3153/api/AutoReport/TmLocInfoList?pageIndex=1"));
+                var res = JObject.Parse(CommonTool.GetResult(currentUrl+"api/AutoReport/TmLocInfoList?pageIndex=1"));
                 if (res["error"].ToString() == "")
                 {
                     foreach (var item in res["list"])
@@ -55,7 +59,6 @@ namespace AutoReportFrame
                 this.dataGridView1.Columns["TmIctm"].HeaderText = "类别";
                 this.dataGridView1.Columns["TmNum"].HeaderText = "编号";
                 this.dataGridView1.Columns["TmId"].Visible = false;
-
             }
             catch (Exception ex)
             {
@@ -85,6 +88,34 @@ namespace AutoReportFrame
             }
 
             this.Close();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            this.textBox1_tmName.Text = "";
+            this.textBox2_applictName.Text = "";
+            this.textBox3_phone.Text = "";
+        }
+
+        public int pageNo { get; set; }
+        /// <summary>
+        /// 上一页
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// 下一页
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button6_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

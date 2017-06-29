@@ -16,6 +16,7 @@ using System.Windows.Forms;
 
 namespace AutoReportFrame
 {
+    public delegate void LoadTmLocInfoOver(tm_loc_info_View tliv);
     public delegate void SelectTmLocInfo(Tm_loc_info tm_loc_info);
     public partial class tm_loc_info_View : Form
     {
@@ -26,8 +27,13 @@ namespace AutoReportFrame
             pageNo = 1;
             this.label5_pageNo.Text = "1";
             GetTmLocInfoList(1);
-          
+            this.FormClosed += Tm_loc_info_View_FormClosed;
             this.label5_pageNo.Text = "1";
+        }
+
+        private void Tm_loc_info_View_FormClosed(object sender, FormClosedEventArgs e)
+        {
+          
         }
 
         private string condition = "";
@@ -69,6 +75,10 @@ namespace AutoReportFrame
                 this.dataGridView1.Columns["TmIctm"].HeaderText = "类别";
                 this.dataGridView1.Columns["TmNum"].HeaderText = "编号";
                 this.dataGridView1.Columns["TmId"].Visible = false;
+                if (OnLoadTmLocInfoOver!=null)
+                {
+                    OnLoadTmLocInfoOver(this);
+                }
             }
             catch (Exception ex)
             {
@@ -87,7 +97,7 @@ namespace AutoReportFrame
             this.Close();
         }
         public static event SelectTmLocInfo OnSelectTmLocInfo;
-
+        public static event LoadTmLocInfoOver OnLoadTmLocInfoOver;
 
         /// <summary>
         /// 确定按钮
@@ -106,6 +116,7 @@ namespace AutoReportFrame
             t.TmNum = this.dataGridView1.SelectedRows[0].Cells["TmNum"].Value.ToString();
             if (OnSelectTmLocInfo!=null)
             {
+                this.Hide();
                 OnSelectTmLocInfo(t);
             }
 

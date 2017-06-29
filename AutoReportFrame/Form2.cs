@@ -16,6 +16,26 @@ namespace AutoReportFrame
 {
     public partial class Form2 : Form
     {
+        public Form2()
+        {
+            InitializeComponent();
+            currentUrl = webUrl;//选择网络链接或本地链接
+            _pin = "112233";
+            this.webBrowser1.Url = new Uri("http://wssq.saic.gov.cn:9080/tmsve/");
+            this.FormClosing += Form2_FormClosing;
+            this.webBrowser1.DocumentCompleted += WebBrowser1_DocumentCompleted;
+            tm_loc_info_View.OnSelectTmLocInfo += Tm_loc_info_View_OnSelectTmLocInfo;
+            tm_loc_info_View.OnLoadTmLocInfoOver += Tm_loc_info_View_OnLoadTmLocInfoOver;
+            //this.FormClosed += Form2_FormClosed;
+        }
+
+        private void Tm_loc_info_View_OnLoadTmLocInfoOver(tm_loc_info_View tliv)
+        {
+            Action d = () => { tliv.Show(); };
+            this.Invoke(d);
+            
+        }
+
         public Form2(Form loginForm,string pin)
         {
             InitializeComponent();
@@ -36,11 +56,13 @@ namespace AutoReportFrame
             f.Close();
         }
 
+
+        #region 字段与属性
+
         private Form f;
 
         private string _pin = "";
 
-        private int _waitSpan = 2000;
         public Models.Tm_loc_info Tm_loc_info { get; set; }
 
         public List<GroupInfo> GroupInfoList { get; set; }
@@ -54,6 +76,8 @@ namespace AutoReportFrame
         public int ItemCount { get; set; }
 
         public int AutoSelectItemCount { get; set; }
+
+        #endregion
 
         /// <summary>
         /// 选择一标一类后，开始具体信息解析处理。
@@ -76,8 +100,15 @@ namespace AutoReportFrame
         /// </summary>
         private void AutoWriteTmNum()
         {
-            HtmlElement ele = doc.GetElementById("agentFilenum");
-            ele.SetAttribute("value",this.Tm_loc_info.TmNum);
+            try
+            {
+                HtmlElement ele = doc.GetElementById("agentFilenum");
+                ele.SetAttribute("value", this.Tm_loc_info.TmNum);
+            }
+            catch (Exception ex)
+            {
+
+            }       
         }
 
         /// <summary>
@@ -86,8 +117,16 @@ namespace AutoReportFrame
         private void GetGroupInfoList()
         {
             int itemCount = 0;
-            GroupInfoList = new List<Models.GroupInfo>();
-            var res = JObject.Parse(CommonLibrary.CommonTool.GetResult(currentUrl+string.Format("api/AutoReport/GroupInfoList?tmId={0}&ictm={1}",this.Tm_loc_info.TmId,this.Tm_loc_info.TmIctm.ToString())));
+            if (GroupInfoList==null)
+            {
+                GroupInfoList = new List<Models.GroupInfo>();
+            }
+            else
+            {
+                GroupInfoList.Clear();
+            }     
+            string restr = CommonLibrary.CommonTool.GetResult(currentUrl + string.Format("api/AutoReport/GroupInfoList?tmId={0}&ictm={1}", this.Tm_loc_info.TmId, this.Tm_loc_info.TmIctm.ToString()));
+            var res = JObject.Parse(restr);
             if (res["error"].ToString()=="")
             {
                 foreach (var groupInfo in res["groupList"])
@@ -117,7 +156,7 @@ namespace AutoReportFrame
             for (int i = 0; i < GroupInfoList.Count; i++)
             {
                 PopupItemWin(GroupInfoList[i].GroupId);
-                Thread.Sleep(_waitSpan);
+                Thread.Sleep(_span*1000);
                 if (GroupInfoList.Count>0)
                 {
                     if (i == (GroupInfoList.Count - 1))
@@ -145,9 +184,8 @@ namespace AutoReportFrame
                 //获取弹出窗口对象信息
                 IHTMLDocument2 hdoc = doc.DomDocument as IHTMLDocument2;
                 IHTMLWindow2 win = hdoc.parentWindow as mshtml.IHTMLWindow2;
-                
                 var d = win.execScript(@"function sucdd(){ return popUpWin;}", "javascript");
-
+                
                 HTMLWindow2Class dddd = doc.InvokeScript("sucdd") as HTMLWindow2Class;
                 
                 IHTMLDocument2 popupdoc = dddd.document;
@@ -205,6 +243,7 @@ namespace AutoReportFrame
                 if (isLastItem)
                 {
                     dddd.close();
+
                     if (AutoSelectItemCount!=ItemCount)
                     {
                         MessageBox.Show("系统自动抓取的小项个数小于实际小项总数，请人工核对抓取，或者删除现有全部小项，并再次启动自动抓取");
@@ -259,8 +298,15 @@ namespace AutoReportFrame
 
         private void button4_Click(object sender, EventArgs e)
         {
-            tm_loc_info_View tliv = new tm_loc_info_View(currentUrl);
-            tliv.Show();
+            ShowTMLocView_async();
+
+        }
+
+        private async void ShowTMLocView_async()
+        {
+            await Task.Run(()=> {
+                tm_loc_info_View tliv = new tm_loc_info_View(currentUrl);
+            });
         }
 
         /// <summary>
@@ -283,6 +329,20 @@ namespace AutoReportFrame
         private void Form2_FormClosing(object sender, FormClosingEventArgs e)
         {
             this.webBrowser1.Dispose();
+        }
+
+        private int _span = 2;
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                this._span = int.Parse(this.textBox1.Text.Trim());
+            }
+            catch (Exception ex)
+            {
+                this._span = 2;
+            }
         }
     }
 }

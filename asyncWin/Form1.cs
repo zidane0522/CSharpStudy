@@ -39,5 +39,10 @@ namespace asyncWin
             await Task.Run(()=> { Thread.Sleep(6000); });
             MessageBox.Show("Wake up");
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

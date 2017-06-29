@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label5_itemCount = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.label3_tmNum = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label5_ictm = new System.Windows.Forms.Label();
@@ -40,8 +42,6 @@
             this.button4 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.webBrowser1 = new System.Windows.Forms.WebBrowser();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label5_itemCount = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -64,6 +64,24 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1230, 143);
             this.panel1.TabIndex = 1;
+            // 
+            // label5_itemCount
+            // 
+            this.label5_itemCount.AutoSize = true;
+            this.label5_itemCount.Location = new System.Drawing.Point(627, 93);
+            this.label5_itemCount.Name = "label5_itemCount";
+            this.label5_itemCount.Size = new System.Drawing.Size(80, 18);
+            this.label5_itemCount.TabIndex = 13;
+            this.label5_itemCount.Text = "小项总数";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(525, 93);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(80, 18);
+            this.label3.TabIndex = 12;
+            this.label3.Text = "小项总数";
             // 
             // label3_tmNum
             // 
@@ -167,24 +185,6 @@
             this.webBrowser1.Size = new System.Drawing.Size(1230, 395);
             this.webBrowser1.TabIndex = 2;
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(525, 93);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(80, 18);
-            this.label3.TabIndex = 12;
-            this.label3.Text = "小项总数";
-            // 
-            // label5_itemCount
-            // 
-            this.label5_itemCount.AutoSize = true;
-            this.label5_itemCount.Location = new System.Drawing.Point(627, 93);
-            this.label5_itemCount.Name = "label5_itemCount";
-            this.label5_itemCount.Size = new System.Drawing.Size(80, 18);
-            this.label5_itemCount.TabIndex = 13;
-            this.label5_itemCount.Text = "小项总数";
-            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
@@ -193,7 +193,9 @@
             this.Controls.Add(this.webBrowser1);
             this.Controls.Add(this.panel1);
             this.Name = "Form2";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "自动上报系统";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);

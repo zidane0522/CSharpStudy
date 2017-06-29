@@ -1,4 +1,6 @@
-﻿using mshtml;
+﻿using CommonLibrary;
+using Newtonsoft.Json.Linq;
+using sidaxin.common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,43 +18,57 @@ namespace AutoReportFrame
         public Form1()
         {
             InitializeComponent();
-            this.webBrowser1.Url = new Uri("http://wssq.saic.gov.cn:9080/tmsve/");
         }
 
-
-        public HtmlDocument doc { get; set; }
-
-        public HtmlElement ele { get; set; }
+        /// <summary>
+        /// 登录按钮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button1_Click(object sender, EventArgs e)
         {
-            doc = webBrowser1.Document;
-            ele = doc.GetElementById("codefans_net").FirstChild;
-            object ddd = ele.InvokeMember("onclick");
-            //object obj = "/tmsve/commonGoods_getIntCls.xhtml";
-            //doc.InvokeScript("popUpWindow",new object[] { "/tmsve/commonGoods_getIntCls.xhtml" });
-            ////popUpWindow('/tmsve/commonGoods_getIntCls.xhtml')
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            IHTMLDocument2 hdoc = doc.DomDocument as IHTMLDocument2;
-            IHTMLWindow2 win = hdoc.parentWindow as mshtml.IHTMLWindow2;
-            var d = win.execScript(@"function sucdd(){ return popUpWin;}", "javascript");
-            HTMLWindow2Class dddd = doc.InvokeScript("sucdd") as HTMLWindow2Class;
-            IHTMLDocument2 popupdoc = dddd.document;
-            IHTMLElementCollection eleclt= popupdoc.all.tags("span") as IHTMLElementCollection;
-            foreach (IHTMLElement item in eleclt)
+            try
             {
-                if (item.innerText!=null)
+                if (this.loginName_txt.Text == "" || this.loginPwd_txt.Text == "")
                 {
-                    if (item.innerText.Contains("问题十四"))
+                    MessageBox.Show("请输入用户名和密码！");
+                }
+                else
+                {
+                    string loginName = this.loginName_txt.Text;
+                    string loginPwd = Crypto.GetMD5(this.loginPwd_txt.Text);
+
+                    JObject obj = null;
+                    string postData = "n={0}&p={1}";
+                    string datas = string.Format(postData, loginName,loginPwd);
+                    string url = CommonLibrary.CommonTool.BaseUrl + "api/Admin/GetLogin?" + datas;
+
+                    var result = CommonTool.GetResult(url);
+                    obj = JObject.Parse(result);
+                    string a = obj["Successful"].ToString();
+                    if (obj["Successful"].ToString() == "True")
                     {
-                        item.click();
+                        this.Hide();
+                        Form2 f2 = new Form2(this,this.textBox1_PIN.Text);
+                        f2.Show();
                     }
                 }
-               
             }
-            //IHTMLElement ele=eleclt.item
+            catch (Exception ex)
+            {
+                MessageBox.Show("登录出现异常！" + ex.Message);
+                this.Close();
+            }
+        }
+
+        /// <summary>
+        /// 取消登录按钮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button2_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

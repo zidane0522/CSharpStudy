@@ -23,21 +23,25 @@ namespace AutoReportFrame
         {
             InitializeComponent();
             this.currentUrl = url;
-            GetTmLocInfoList();
             pageNo = 1;
+            this.label5_pageNo.Text = "1";
+            GetTmLocInfoList(1);
+          
             this.label5_pageNo.Text = "1";
         }
 
+        private string condition = "";
+
         private string currentUrl = "";
 
-        private void GetTmLocInfoList()
+        private void GetTmLocInfoList(int pageIndex)
         {
             try
             {
                 //获取未被提交的一标一类信息列表
                 //http://localhost:3153/
                 List<Tm_loc_info> list = new List<Models.Tm_loc_info>();
-                var res = JObject.Parse(CommonTool.GetResult(currentUrl+"api/AutoReport/TmLocInfoList?pageIndex=1"));
+                var res = JObject.Parse(CommonTool.GetResult(currentUrl + "api/AutoReport/TmLocInfoList?pageIndex="+pageIndex.ToString() + condition));
                 if (res["error"].ToString() == "")
                 {
                     foreach (var item in res["list"])
@@ -95,6 +99,8 @@ namespace AutoReportFrame
             this.textBox1_tmName.Text = "";
             this.textBox2_applictName.Text = "";
             this.textBox3_phone.Text = "";
+            condition = "";
+            GetTmLocInfoList(1);
         }
 
         public int pageNo { get; set; }
@@ -105,7 +111,16 @@ namespace AutoReportFrame
         /// <param name="e"></param>
         private void button5_Click(object sender, EventArgs e)
         {
-
+            if (pageNo==1)
+            {
+                MessageBox.Show("已经是第一页");
+            }
+            else
+            {
+                GetTmLocInfoList(pageNo-1);
+                pageNo--;
+                this.label5_pageNo.Text = pageNo.ToString();
+            }
         }
 
         /// <summary>
@@ -115,7 +130,41 @@ namespace AutoReportFrame
         /// <param name="e"></param>
         private void button6_Click(object sender, EventArgs e)
         {
+            GetTmLocInfoList(pageNo + 1);
+            pageNo++;
+            this.label5_pageNo.Text = pageNo.ToString();
+        }
 
+        private void button1_Click(object sender, EventArgs e)
+        {//string phone=null,string tmName=null,string applicant=null
+            pageNo = 1;
+            this.label5_pageNo.Text = "1";
+            condition = "";
+            if (textBox3_phone.Text.Trim()!="")
+            {
+                condition += "&phone=" + textBox3_phone.Text.Trim();
+            }
+            else
+            {
+                condition += "&phone=";
+            }
+            if (textBox1_tmName.Text.Trim()!="")
+            {
+                condition += "&tmName=" + textBox1_tmName.Text.Trim();
+            }
+            else
+            {
+                condition += "&tmName=";
+            }
+            if (textBox2_applictName.Text.Trim()!="")
+            {
+                condition += "&applicant=" + textBox2_applictName.Text.Trim();
+            }
+            else
+            {
+                condition += "&applicant=";
+            }
+            GetTmLocInfoList(1);
         }
     }
 }

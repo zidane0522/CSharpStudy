@@ -16,15 +16,30 @@ namespace AutoReportFrame
 {
     public partial class Form2 : Form
     {
-        public Form2()
+        public Form2(Form loginForm,string pin)
         {
             InitializeComponent();
-            currentUrl = webUrl;
+            currentUrl = localUrl;
+            _pin = pin;
+            f = loginForm;
             this.webBrowser1.Url = new Uri("http://wssq.saic.gov.cn:9080/tmsve/");
             this.FormClosing += Form2_FormClosing;
             this.webBrowser1.DocumentCompleted += WebBrowser1_DocumentCompleted;
             tm_loc_info_View.OnSelectTmLocInfo += Tm_loc_info_View_OnSelectTmLocInfo;
+            this.FormClosed += Form2_FormClosed;
         }
+
+
+
+        private void Form2_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            f.Close();
+        }
+
+        private Form f;
+
+        private string _pin = "";
+
         private int _waitSpan = 2000;
         public Models.Tm_loc_info Tm_loc_info { get; set; }
 
@@ -231,7 +246,7 @@ namespace AutoReportFrame
             {
                 HtmlElement pinele = doc.GetElementById("pin");
                 HtmlElement loginele = doc.GetElementById("pinword");
-                pinele.SetAttribute("value", "112233");
+                pinele.SetAttribute("value", _pin);
                 loginele.InvokeMember("click");
             }
             catch (Exception ex)

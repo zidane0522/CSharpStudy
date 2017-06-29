@@ -85,6 +85,7 @@
             this.button1.TabIndex = 6;
             this.button1.Text = "查询";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // label3
             // 
@@ -144,7 +145,7 @@
             this.panel2.Controls.Add(this.button4);
             this.panel2.Controls.Add(this.button3);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 513);
+            this.panel2.Location = new System.Drawing.Point(0, 1010);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(1112, 100);
             this.panel2.TabIndex = 1;
@@ -228,18 +229,19 @@
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.RowTemplate.Height = 30;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(1112, 356);
+            this.dataGridView1.Size = new System.Drawing.Size(1112, 853);
             this.dataGridView1.TabIndex = 4;
             // 
             // tm_loc_info_View
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1112, 613);
+            this.ClientSize = new System.Drawing.Size(1112, 1110);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Name = "tm_loc_info_View";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "一标一类列表";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

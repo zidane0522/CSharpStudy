@@ -19,7 +19,7 @@ namespace AutoReportFrame
         public Form2(Form loginForm,string pin)
         {
             InitializeComponent();
-            currentUrl = localUrl;
+            currentUrl = webUrl;//选择网络链接或本地链接
             _pin = pin;
             f = loginForm;
             this.webBrowser1.Url = new Uri("http://wssq.saic.gov.cn:9080/tmsve/");
@@ -55,6 +55,10 @@ namespace AutoReportFrame
 
         public int AutoSelectItemCount { get; set; }
 
+        /// <summary>
+        /// 选择一标一类后，开始具体信息解析处理。
+        /// </summary>
+        /// <param name="tm_loc_info"></param>
         private void Tm_loc_info_View_OnSelectTmLocInfo(Models.Tm_loc_info tm_loc_info)
         {
             this.Tm_loc_info = tm_loc_info;
@@ -67,12 +71,18 @@ namespace AutoReportFrame
             AutoSelectItem();
         }
 
+        /// <summary>
+        /// 将一标一类号码作为代理文号写入商标局系统
+        /// </summary>
         private void AutoWriteTmNum()
         {
             HtmlElement ele = doc.GetElementById("agentFilenum");
             ele.SetAttribute("value",this.Tm_loc_info.TmNum);
         }
 
+        /// <summary>
+        /// 获取一标一类的群组信息列表
+        /// </summary>
         private void GetGroupInfoList()
         {
             int itemCount = 0;
@@ -97,6 +107,10 @@ namespace AutoReportFrame
             this.ItemCount = itemCount;
         }
 
+
+        /// <summary>
+        /// 遍历群组，开始选择小项
+        /// </summary>
         private void AutoSelectItem()
         {
             this.AutoSelectItemCount = 0;
@@ -119,6 +133,11 @@ namespace AutoReportFrame
             }    
         }
 
+        /// <summary>
+        /// 自动选择小项具体处理
+        /// </summary>
+        /// <param name="pararray">小项中文说明列表</param>
+        /// <param name="isLastItem">是否是最后一组要选择的小项</param>
         private void SelectItem(string[] pararray,bool isLastItem)
         {
             try
@@ -203,6 +222,10 @@ namespace AutoReportFrame
       
         }
 
+        /// <summary>
+        /// 弹出小项选择网页
+        /// </summary>
+        /// <param name="groupId"></param>
         private void PopupItemWin(string groupId)
         {
             doc = webBrowser1.Document;
@@ -215,7 +238,7 @@ namespace AutoReportFrame
         // bool selectingItem = false;
         private void WebBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
-            if (unloginneed)
+            if (unloginneed)//自动登陆商标局系统
             {
                 doc = webBrowser1.Document;
                 AutoLogin();
@@ -240,6 +263,9 @@ namespace AutoReportFrame
             tliv.Show();
         }
 
+        /// <summary>
+        /// 自动写入信息并登陆
+        /// </summary>
         private void AutoLogin()
         {
             try

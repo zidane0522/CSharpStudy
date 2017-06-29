@@ -34,6 +34,12 @@ namespace AutoReportFrame
 
         private string currentUrl = "";
 
+        public int pageNo { get; set; }
+
+        /// <summary>
+        /// 获取一标一类列表
+        /// </summary>
+        /// <param name="pageIndex"></param>
         private void GetTmLocInfoList(int pageIndex)
         {
             try
@@ -71,11 +77,23 @@ namespace AutoReportFrame
 
         }
 
+        /// <summary>
+        /// 取消按钮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button4_Click(object sender, EventArgs e)
         {
             this.Close();
         }
         public static event SelectTmLocInfo OnSelectTmLocInfo;
+
+
+        /// <summary>
+        /// 确定按钮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button3_Click(object sender, EventArgs e)
         {
             
@@ -94,6 +112,11 @@ namespace AutoReportFrame
             this.Close();
         }
 
+        /// <summary>
+        /// 清空查询条件按钮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button2_Click(object sender, EventArgs e)
         {
             this.textBox1_tmName.Text = "";
@@ -103,7 +126,6 @@ namespace AutoReportFrame
             GetTmLocInfoList(1);
         }
 
-        public int pageNo { get; set; }
         /// <summary>
         /// 上一页
         /// </summary>
@@ -135,6 +157,11 @@ namespace AutoReportFrame
             this.label5_pageNo.Text = pageNo.ToString();
         }
 
+        /// <summary>
+        /// 查询按钮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button1_Click(object sender, EventArgs e)
         {//string phone=null,string tmName=null,string applicant=null
             pageNo = 1;

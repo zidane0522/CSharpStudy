@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace AutoReportFrame.Models
 {
+    /// <summary>
+    /// 一标一类信息类
+    /// </summary>
     public class Tm_loc_info
     {
         public string TmName { get; set; }
@@ -21,6 +24,9 @@ namespace AutoReportFrame.Models
         public string TmNum { get; set; }
     }
 
+    /// <summary>
+    /// 群组信息类
+    /// </summary>
     public class GroupInfo
     {
         public string GroupId { get; set; }

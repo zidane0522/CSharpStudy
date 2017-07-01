@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -27,16 +28,31 @@ namespace AutoReportFrame
         {
             doc = webBrowser1.Document;
             ele = doc.GetElementById("codefans_net").FirstChild;
-            object ddd = ele.InvokeMember("onclick");
-            //object obj = "/tmsve/commonGoods_getIntCls.xhtml";
-            //doc.InvokeScript("popUpWindow",new object[] { "/tmsve/commonGoods_getIntCls.xhtml" });
-            ////popUpWindow('/tmsve/commonGoods_getIntCls.xhtml')
+
+            for (int i = 0; i < 10; i++)
+            {
+                doc.InvokeScript("popUpWindow1", new object[] { "tmoas/wssqsy/help/m88.html" });
+                Thread.Sleep(3000);
+            }
+         
+            popUPWinAsync(doc);
+
+        }
+
+        private async void popUPWinAsync(HtmlDocument doc)
+        {
+            await Task.Run(()=> {
+                doc.InvokeScript("popUpWindow1", new object[] { "tmoas/wssqsy/help/m88.html" });
+                //object ddd = ele.InvokeMember("onclick");
+                Thread.Sleep(3000);
+            });
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             IHTMLDocument2 hdoc = doc.DomDocument as IHTMLDocument2;
             IHTMLWindow2 win = hdoc.parentWindow as mshtml.IHTMLWindow2;
+
             var d = win.execScript(@"function sucdd(){ return popUpWin;}", "javascript");
             HTMLWindow2Class dddd = doc.InvokeScript("sucdd") as HTMLWindow2Class;
             IHTMLDocument2 popupdoc = dddd.document;

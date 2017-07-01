@@ -186,8 +186,7 @@ namespace AutoReportFrame
                 IHTMLWindow2 win = hdoc.parentWindow as mshtml.IHTMLWindow2;
                 var d = win.execScript(@"function sucdd(){ return popUpWin;}", "javascript");
                 
-                HTMLWindow2Class dddd = doc.InvokeScript("sucdd") as HTMLWindow2Class;
-                
+                HTMLWindow2Class dddd = doc.InvokeScript("sucdd") as HTMLWindow2Class;          
                 IHTMLDocument2 popupdoc = dddd.document;
                 win = popupdoc.parentWindow as IHTMLWindow2;
                 string s = @"function confirm() {";

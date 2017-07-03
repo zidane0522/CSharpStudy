@@ -20,7 +20,7 @@ namespace AutoReportFrame
         {
             InitializeComponent();
             currentUrl = webUrl;//选择网络链接或本地链接
-            _pin = "112233";
+            _pin = "1234567";
             this.webBrowser1.Url = new Uri("http://wssq.saic.gov.cn:9080/tmsve/");
             this.FormClosing += Form2_FormClosing;
             this.webBrowser1.DocumentCompleted += WebBrowser1_DocumentCompleted;
@@ -46,6 +46,7 @@ namespace AutoReportFrame
             this.FormClosing += Form2_FormClosing;
             this.webBrowser1.DocumentCompleted += WebBrowser1_DocumentCompleted;
             tm_loc_info_View.OnSelectTmLocInfo += Tm_loc_info_View_OnSelectTmLocInfo;
+            tm_loc_info_View.OnLoadTmLocInfoOver += Tm_loc_info_View_OnLoadTmLocInfoOver;
             this.FormClosed += Form2_FormClosed;
         }
 
@@ -185,8 +186,21 @@ namespace AutoReportFrame
                 IHTMLDocument2 hdoc = doc.DomDocument as IHTMLDocument2;
                 IHTMLWindow2 win = hdoc.parentWindow as mshtml.IHTMLWindow2;
                 var d = win.execScript(@"function sucdd(){ return popUpWin;}", "javascript");
+                if (hdoc==null)
+                {
+                    MessageBox.Show("hdoc is null");
+                }
+                if (win==null)
+                {
+                    MessageBox.Show("win is null");
+                }
+                //HTMLWindow2Class dddd = doc.InvokeScript("sucdd") as HTMLWindow2Class;
+                IHTMLWindow2 dddd = doc.InvokeScript("sucdd") as IHTMLWindow2;
                 
-                HTMLWindow2Class dddd = doc.InvokeScript("sucdd") as HTMLWindow2Class;          
+                if (dddd==null)
+                {
+                    MessageBox.Show("DDDDDD");
+                }     
                 IHTMLDocument2 popupdoc = dddd.document;
                 win = popupdoc.parentWindow as IHTMLWindow2;
                 string s = @"function confirm() {";
@@ -255,7 +269,7 @@ namespace AutoReportFrame
             }
             catch (Exception ex)
             {
-
+                MessageBox.Show(ex.Message);
             }
       
         }

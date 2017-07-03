@@ -29,6 +29,9 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.button2 = new System.Windows.Forms.Button();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.label5_itemCount = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label3_tmNum = new System.Windows.Forms.Label();
@@ -42,14 +45,13 @@
             this.button4 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.webBrowser1 = new System.Windows.Forms.WebBrowser();
-            this.label5 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.button2 = new System.Windows.Forms.Button();
+            this.button3_reLoadItem = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.button3_reLoadItem);
             this.panel1.Controls.Add(this.button2);
             this.panel1.Controls.Add(this.textBox1);
             this.panel1.Controls.Add(this.label5);
@@ -68,8 +70,34 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1230, 143);
+            this.panel1.Size = new System.Drawing.Size(1298, 143);
             this.panel1.TabIndex = 1;
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(1095, 84);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(70, 38);
+            this.button2.TabIndex = 16;
+            this.button2.Text = "确定";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(978, 91);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(100, 28);
+            this.textBox1.TabIndex = 15;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(856, 94);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(116, 18);
+            this.label5.TabIndex = 14;
+            this.label5.Text = "设置时间间隔";
             // 
             // label5_itemCount
             // 
@@ -188,40 +216,25 @@
             this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowser1.Name = "webBrowser1";
             this.webBrowser1.ScriptErrorsSuppressed = true;
-            this.webBrowser1.Size = new System.Drawing.Size(1230, 395);
+            this.webBrowser1.Size = new System.Drawing.Size(1298, 395);
             this.webBrowser1.TabIndex = 2;
+            //this.webBrowser1.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.webBrowser1_DocumentCompleted_1);
             // 
-            // label5
+            // button3_reLoadItem
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(856, 94);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(116, 18);
-            this.label5.TabIndex = 14;
-            this.label5.Text = "设置时间间隔";
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(978, 91);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 28);
-            this.textBox1.TabIndex = 15;
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(1095, 84);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(70, 38);
-            this.button2.TabIndex = 16;
-            this.button2.Text = "确定";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.button3_reLoadItem.Location = new System.Drawing.Point(265, 94);
+            this.button3_reLoadItem.Name = "button3_reLoadItem";
+            this.button3_reLoadItem.Size = new System.Drawing.Size(131, 43);
+            this.button3_reLoadItem.TabIndex = 17;
+            this.button3_reLoadItem.Text = "重新加载小项";
+            this.button3_reLoadItem.UseVisualStyleBackColor = true;
+            this.button3_reLoadItem.Click += new System.EventHandler(this.button3_reLoadItem_Click);
             // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1230, 538);
+            this.ClientSize = new System.Drawing.Size(1298, 538);
             this.Controls.Add(this.webBrowser1);
             this.Controls.Add(this.panel1);
             this.Name = "Form2";
@@ -253,5 +266,6 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button button3_reLoadItem;
     }
 }

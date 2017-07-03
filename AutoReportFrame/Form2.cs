@@ -90,7 +90,7 @@ namespace AutoReportFrame
             this.label2_applicant.Text = tm_loc_info.Applicant;
             this.label3_tmName.Text = tm_loc_info.TmName;
             this.label5_ictm.Text = tm_loc_info.TmIctm.ToString();
-            this.label3_tmNum.Text = tm_loc_info.TmNum;
+            this.label3_tmNum.Text = tm_loc_info.TmNum.Replace("-","");
             AutoWriteTmNum();
             GetGroupInfoList();
             AutoSelectItem();
@@ -104,7 +104,7 @@ namespace AutoReportFrame
             try
             {
                 HtmlElement ele = doc.GetElementById("agentFilenum");
-                ele.SetAttribute("value", this.Tm_loc_info.TmNum);
+                ele.SetAttribute("value", this.label3_tmNum.Text);
             }
             catch (Exception ex)
             {
@@ -355,6 +355,20 @@ namespace AutoReportFrame
             catch (Exception ex)
             {
                 this._span = 2;
+            }
+        }
+
+        private void button3_reLoadItem_Click(object sender, EventArgs e)
+        {
+            if (this.Tm_loc_info!=null)
+            {
+                doc = webBrowser1.Document;
+                doc.InvokeScript("removeAll");
+                AutoSelectItem();
+            }
+            else
+            {
+                MessageBox.Show("请先选择一标一类");
             }
         }
     }

@@ -120,26 +120,83 @@ namespace AutoReportFrame
                 CurrentApplicant.Country = res["data"]["county"].ToString();
                 CurrentApplicant.IDCardNum = res["data"]["idCardNum"].ToString();
                 CurrentApplicant.Province = res["data"]["province"].ToString();
+                string region =CurrentApplicant.Province+ CurrentApplicant.City + CurrentApplicant.Country;
+                string regionIndex = "1";
+                string address = CurrentApplicant.Province + CurrentApplicant.City + CurrentApplicant.Country + CurrentApplicant.Address;
+                if (CurrentApplicant.Province.Contains("北京市")|| CurrentApplicant.Province.Contains("天津市")|| CurrentApplicant.Province.Contains("重庆市")|| CurrentApplicant.Province.Contains("上海市"))
+                {
+                    region = CurrentApplicant.City + CurrentApplicant.Country;
+                    address = CurrentApplicant.City + CurrentApplicant.Country + CurrentApplicant.Address;
+                }
+                if (CurrentApplicant.Province.Contains("香港"))
+                {
+                    region = "香港";
+                    regionIndex = "4";
+                    address = CurrentApplicant.City + CurrentApplicant.Country + CurrentApplicant.Address;
 
+                }
+                else if(CurrentApplicant.Province.Contains("澳门"))
+                {
+                    region = "澳门";
+                    regionIndex = "5";
+                    address = CurrentApplicant.City + CurrentApplicant.Country + CurrentApplicant.Address;
+
+                }
+                else if (CurrentApplicant.Province.Contains("台湾"))
+                {
+                    region = "台湾";
+                    regionIndex = "3";
+                }
+                //opetate_sqType(2);opetate_appGjdq_sqType(2,1)
+                //opetate_appGjdq(2);opetate_appGjdq_2(2);opetate_appGjdq_sqType(2,2)
                 if (CurrentApplicant.Category=="法人或其他组织")
-                {                  
+                {
                     doc.GetElementById("appTypeId").SetAttribute("selectedIndex", "1");
+
+                    doc.InvokeScript("opetate_sqType",new object[] { 2});
+                    doc.InvokeScript("opetate_appGjdq_sqType", new object[] { 2,1 });
+
+                    doc.GetElementById("appGjdq").SetAttribute("selectedIndex", regionIndex);
+
+                    doc.InvokeScript("opetate_appGjdq", new object[] { 2 });
+                    doc.InvokeScript("opetate_appGjdq_2", new object[] { 2 });
+                    doc.InvokeScript("opetate_appGjdq_sqType", new object[] { 2, 2 });
                 }
                 else
                 {
-                    doc.GetElementById("appCertificateId").SetAttribute("selectedIndex", "1");
-                    doc.GetElementById("appCertificateNum").SetAttribute("value",CurrentApplicant.IDCardNum);
                     doc.GetElementById("appTypeId").SetAttribute("selectedIndex", "2");
+                    doc.InvokeScript("opetate_sqType", new object[] { 2 });
+                    doc.InvokeScript("opetate_appGjdq_sqType", new object[] { 2, 1 });
+
+                    doc.GetElementById("appGjdq").SetAttribute("selectedIndex", regionIndex);
+
+                    doc.InvokeScript("opetate_appGjdq", new object[] { 2 });
+                    doc.InvokeScript("opetate_appGjdq_2", new object[] { 2 });
+                    doc.InvokeScript("opetate_appGjdq_sqType", new object[] { 2, 2 });
+
+
+                    doc.GetElementById("appCertificateId").SetAttribute("selectedIndex", "1");
+                    doc.GetElementById("appCertificateNum").SetAttribute("value",CurrentApplicant.IDCardNum);                    
 
                 }
         
                 doc.GetElementById("agentPerson").SetAttribute("value", "武齐鹏");
                 doc.GetElementById("appCnName").SetAttribute("value", CurrentApplicant.Name);
                 doc.GetElementById("appContactPerson").SetAttribute("value", CurrentApplicant.Contact);
+
+                if (regionIndex=="1")
+                {
+                    doc.GetElementById("appRegionalismId").SetAttribute("value", region);
+                }
+                else
+                {
+
+                }
+                doc.GetElementById("appCnAddr").SetAttribute("value", address);
+
                 doc.GetElementById("appContactTel").SetAttribute("value", "010-57743079");
                 doc.GetElementById("appContactZip").SetAttribute("value", "100012");
 
-                doc.GetElementById("appGjdq").SetAttribute("selectedIndex","1");
             }
             else
             {

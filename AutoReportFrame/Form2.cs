@@ -19,8 +19,8 @@ namespace AutoReportFrame
         public Form2()
         {
             InitializeComponent();
-            currentUrl = webUrl;//选择网络链接或本地链接
-            _pin = "1234567";
+            currentUrl = localUrl;//选择网络链接或本地链接
+            _pin = "112233";
             this.webBrowser1.Url = new Uri("http://wssq.saic.gov.cn:9080/tmsve/");
             this.FormClosing += Form2_FormClosing;
             this.webBrowser1.DocumentCompleted += WebBrowser1_DocumentCompleted;
@@ -32,8 +32,7 @@ namespace AutoReportFrame
         private void Tm_loc_info_View_OnLoadTmLocInfoOver(tm_loc_info_View tliv)
         {
             Action d = () => { tliv.Show(); };
-            this.Invoke(d);
-            
+            this.Invoke(d);          
         }
 
         public Form2(Form loginForm,string pin)
@@ -92,8 +91,60 @@ namespace AutoReportFrame
             this.label5_ictm.Text = tm_loc_info.TmIctm.ToString();
             this.label3_tmNum.Text = tm_loc_info.TmNum.Replace("-","");
             AutoWriteTmNum();
+            AutoWriteApplicantInfo();
             GetGroupInfoList();
             AutoSelectItem();
+        }
+
+
+        public Applicant CurrentApplicant { get; set; }
+
+        /// <summary>
+        /// 自动写入申请人信息
+        /// </summary>
+        private void AutoWriteApplicantInfo()
+        {
+            string restr = CommonLibrary.CommonTool.GetResult(currentUrl + string.Format("api/AutoReport/GetApplicant?tmId={0}", this.Tm_loc_info.TmId));
+            var res = JObject.Parse(restr);
+            if (res["error"].ToString()=="")
+            {
+                if (CurrentApplicant == null)
+                {
+                    CurrentApplicant = new Models.Applicant();                 
+                }
+                CurrentApplicant.Name = res["data"]["name"].ToString();
+                CurrentApplicant.Category = res["data"]["category"].ToString();
+                CurrentApplicant.Address = res["data"]["address"].ToString();
+                CurrentApplicant.City = res["data"]["city"].ToString();
+                CurrentApplicant.Contact = res["data"]["contact"].ToString();
+                CurrentApplicant.Country = res["data"]["county"].ToString();
+                CurrentApplicant.IDCardNum = res["data"]["idCardNum"].ToString();
+                CurrentApplicant.Province = res["data"]["province"].ToString();
+
+                if (CurrentApplicant.Category=="法人或其他组织")
+                {                  
+                    doc.GetElementById("appTypeId").SetAttribute("selectedIndex", "1");
+                }
+                else
+                {
+                    doc.GetElementById("appCertificateId").SetAttribute("selectedIndex", "1");
+                    doc.GetElementById("appCertificateNum").SetAttribute("value",CurrentApplicant.IDCardNum);
+                    doc.GetElementById("appTypeId").SetAttribute("selectedIndex", "2");
+
+                }
+        
+                doc.GetElementById("agentPerson").SetAttribute("value", "武齐鹏");
+                doc.GetElementById("appCnName").SetAttribute("value", CurrentApplicant.Name);
+                doc.GetElementById("appContactPerson").SetAttribute("value", CurrentApplicant.Contact);
+                doc.GetElementById("appContactTel").SetAttribute("value", "010-57743079");
+                doc.GetElementById("appContactZip").SetAttribute("value", "100012");
+
+                doc.GetElementById("appGjdq").SetAttribute("selectedIndex","1");
+            }
+            else
+            {
+                MessageBox.Show(res["error"].ToString());
+            }
         }
 
         /// <summary>
@@ -344,7 +395,7 @@ namespace AutoReportFrame
             this.webBrowser1.Dispose();
         }
 
-        private int _span = 2;
+        private int _span = 3;
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -354,7 +405,7 @@ namespace AutoReportFrame
             }
             catch (Exception ex)
             {
-                this._span = 2;
+                this._span = 3;
             }
         }
 

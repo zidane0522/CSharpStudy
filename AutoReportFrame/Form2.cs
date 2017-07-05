@@ -180,18 +180,18 @@ namespace AutoReportFrame
 
                 }
         
-                doc.GetElementById("agentPerson").SetAttribute("value", "武齐鹏");
+                doc.GetElementById("agentPerson").SetAttribute("value", "武奇鹏");
                 doc.GetElementById("appCnName").SetAttribute("value", CurrentApplicant.Name);
-                doc.GetElementById("appContactPerson").SetAttribute("value", CurrentApplicant.Contact);
+                doc.GetElementById("appContactPerson").SetAttribute("value", "武奇鹏");
 
-                if (regionIndex=="1")
-                {
-                    doc.GetElementById("appRegionalismId").SetAttribute("value", region);
-                }
-                else
-                {
+                //if (regionIndex=="1")
+                //{
+                //    doc.GetElementById("appRegionalismId").SetAttribute("value", region);
+                //}
+                //else
+                //{
 
-                }
+                //}
                 doc.GetElementById("appCnAddr").SetAttribute("value", address);
 
                 doc.GetElementById("appContactTel").SetAttribute("value", "010-57743079");

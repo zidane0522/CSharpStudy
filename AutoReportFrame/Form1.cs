@@ -48,9 +48,13 @@ namespace AutoReportFrame
                     string a = obj["Successful"].ToString();
                     if (obj["Successful"].ToString() == "True")
                     {
+                        //this.Hide();
+                        //Form2 f2 = new Form2(this,this.textBox1_PIN.Text);
+                        //f2.Show();
+
                         this.Hide();
-                        Form2 f2 = new Form2(this,this.textBox1_PIN.Text);
-                        f2.Show();
+                        Menu menuview = new AutoReportFrame.Menu(this,this.textBox1_PIN.Text);
+                        menuview.Show();
                     }
                 }
             }

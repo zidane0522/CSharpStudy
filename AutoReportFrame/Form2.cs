@@ -417,6 +417,11 @@ namespace AutoReportFrame
             this.webBrowser1.Navigate("http://wssq.saic.gov.cn:9080/tmsve/sbzcsq_getSbzcMain.xhtml");
         }
 
+        private void button3_Click(object sender, EventArgs e)
+        {
+            this.webBrowser1.Navigate("http://wssq.saic.gov.cn:9080/tmsve/wdsqgl_getappType.xhtml");
+        }
+
         private void button4_Click(object sender, EventArgs e)
         {
             ShowTMLocView_async();
@@ -479,5 +484,7 @@ namespace AutoReportFrame
                 MessageBox.Show("请先选择一标一类");
             }
         }
+
+  
     }
 }

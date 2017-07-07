@@ -18,7 +18,7 @@ namespace AutoReportFrame
             InitializeComponent();
             //this.menu = menu;
             this.pin = "112233";
-            this.currentUrl = webUrl;
+            this.currentUrl = localUrl;
             this.webBrowser1.Url = new Uri("http://wssq.saic.gov.cn:9080/tmsve/");
             this.webBrowser1.DocumentCompleted += WebBrowser1_DocumentCompleted;
             this.FormClosing += ApplicationManageView_FormClosing;
@@ -27,6 +27,7 @@ namespace AutoReportFrame
         public ApplicationManageView(Form menu,string pin)
         {
             InitializeComponent();
+            this.button3.Visible = false;
             this.menu = menu;
             this.pin = pin;
             this.currentUrl = webUrl;
@@ -53,7 +54,7 @@ namespace AutoReportFrame
 
         private string currentUrl="";
 
-        private string localUrl = "http://localhost:3135/";
+        private string localUrl = "http://localhost:3153/";
 
         private string webUrl = "http://api.alibiaobiao.cn/";
 
@@ -96,7 +97,8 @@ namespace AutoReportFrame
         }
 
         private Dictionary<string, string> dic;
-        private List<string> errorList = new List<string>();
+      
+
         /// <summary>
         /// 开始抓取申请号码
         /// </summary>
@@ -104,8 +106,11 @@ namespace AutoReportFrame
         /// <param name="e"></param>
         private void button2_Click(object sender, EventArgs e)
         {
+
+
             HtmlElementCollection tablelist = doc.GetElementsByTagName("table");
             HtmlElement tableNode = tablelist[2];
+
             HtmlElementCollection trlist = tableNode.GetElementsByTagName("tr");
 
             if (dic==null)
@@ -153,6 +158,11 @@ namespace AutoReportFrame
                 MessageBox.Show("注册号抓取完成");
             }
             
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            this.webBrowser1.Navigate(@"file:///C:/Users/zidanepc/Desktop/suck.html");
         }
     }
 }

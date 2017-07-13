@@ -125,6 +125,10 @@ namespace AutoReportFrame
             for (int i = 1; i < trlist.Count; i++)
             {
                 HtmlElementCollection tdlist = trlist[i].GetElementsByTagName("td");
+                if (tdlist[3].InnerText.Trim()=="")
+                {
+                    continue;
+                }
                 dic.Add(tdlist[3].InnerText.Trim(),tdlist[5].InnerText.Trim());
             }
             foreach (var item in dic)

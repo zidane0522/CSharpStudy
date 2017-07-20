@@ -64,6 +64,7 @@ namespace WordObjLearning
             Object Nothing = Missing.Value;
             wordDoc = wordApp.Documents.Add(ref Nothing, ref Nothing, ref Nothing);
             Word.Table table = wordDoc.Tables.Add(wordApp.Selection.Range,5,5,ref Nothing,ref Nothing);
+            
             table.Borders.Enable = 1;
             for (int i = 1; i <=5; i++)
             {

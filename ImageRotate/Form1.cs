@@ -50,6 +50,7 @@ namespace ImageRotate
             gmseDeskew sk = new gmseDeskew(bmpIn);
             double skewangle = sk.GetSkewAngle();
             Bitmap bmpOut = RotateImage(bmpIn, -skewangle);
+            
             this.newImgBox.Image = bmpOut as Image;
             //bmpOut.Save(fnOut, ImageFormat.Jpeg);//此处简单保存，可采用压缩方式保存
         }

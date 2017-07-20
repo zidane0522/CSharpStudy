@@ -59,6 +59,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemotingCallbackClient", "R
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoReportFrame", "AutoReportFrame\AutoReportFrame.csproj", "{A11FCEE3-BADD-4AFB-948C-A4C667B60777}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageRotate", "ImageRotate\ImageRotate.csproj", "{D8F30CE3-9053-4AFF-81A5-69810EAC0BF0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -165,6 +167,10 @@ Global
 		{A11FCEE3-BADD-4AFB-948C-A4C667B60777}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A11FCEE3-BADD-4AFB-948C-A4C667B60777}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A11FCEE3-BADD-4AFB-948C-A4C667B60777}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8F30CE3-9053-4AFF-81A5-69810EAC0BF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8F30CE3-9053-4AFF-81A5-69810EAC0BF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8F30CE3-9053-4AFF-81A5-69810EAC0BF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8F30CE3-9053-4AFF-81A5-69810EAC0BF0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using mshtml;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -6,6 +7,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -58,7 +60,7 @@ namespace AutoReportFrame
 
         private string webUrl = "http://api.alibiaobiao.cn/";
 
-
+        private int pageCount = 0;
         /// <summary>
         /// 自动写入信息并登陆
         /// </summary>
@@ -106,7 +108,7 @@ namespace AutoReportFrame
         /// <param name="e"></param>
         private void button2_Click(object sender, EventArgs e)
         {
-
+            
 
             HtmlElementCollection tablelist = doc.GetElementsByTagName("table");
             HtmlElement tableNode = tablelist[2];
@@ -167,6 +169,116 @@ namespace AutoReportFrame
         private void button3_Click(object sender, EventArgs e)
         {
             this.webBrowser1.Navigate(@"file:///C:/Users/zidanepc/Desktop/suck.html");
+        }
+
+        /// <summary>
+        /// 抓取所有信息
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button4_Click(object sender, EventArgs e)
+        {
+            pageCount = int.Parse(doc.GetElementById("countpage").GetAttribute("value"));
+
+            for (int i = 0; i < pageCount; i++)
+            {
+                GetInfoHtml();
+                doc.InvokeScript("dopage",new object[]{3});
+                Thread.Sleep(2000);
+            }          
+        }
+
+        private void GetInfoHtml()
+        {
+            HtmlElementCollection tablelist = doc.GetElementsByTagName("table");
+            HtmlElement tableNode = tablelist[2];
+
+            HtmlElementCollection trlist = tableNode.GetElementsByTagName("tr");
+
+            if (dic == null)
+            {
+                dic = new Dictionary<string, string>();
+            }
+            else
+            {
+                dic.Clear();
+            }
+
+            for (int i = 1; i < trlist.Count; i++)
+            {
+
+                HtmlElementCollection tdlist = trlist[i].GetElementsByTagName("td");
+                if (tdlist[6].InnerText.Trim() != "注册申请" || tdlist[8].InnerText.Trim() != "申请完成")
+                {
+                    continue;
+                }
+                string id = trlist[i].FirstChild.FirstChild.GetAttribute("id");
+                if (id == "")
+                {
+                    continue;
+                }
+                PopupItemWin(id);
+                Thread.Sleep(2 * 1000);
+                dic.Add(tdlist[3].InnerText.Trim(), tdlist[5].InnerText.Trim());
+            }
+        }
+
+
+        private void GetInfo()
+        {
+            IHTMLDocument2 hdoc = doc.DomDocument as IHTMLDocument2;
+            IHTMLWindow2 win = hdoc.parentWindow as mshtml.IHTMLWindow2;
+            var d = win.execScript(@"function sucdd(){ return popUpWinQm;}", "javascript");
+            if (hdoc == null)
+            {
+                MessageBox.Show("hdoc is null");
+            }
+            if (win == null)
+            {
+                MessageBox.Show("win is null");
+            }
+            //HTMLWindow2Class dddd = doc.InvokeScript("sucdd") as HTMLWindow2Class;
+            IHTMLWindow2 dddd = doc.InvokeScript("sucdd") as IHTMLWindow2;
+            IHTMLDocument2 popupdoc = dddd.document;
+            IHTMLElementCollection elelist = popupdoc.all.tags("tr") as IHTMLElementCollection;
+            Dictionary<string, string> dic = new Dictionary<string, string>();
+            int i = 0;//申请号，申请人类型（法人或其他组织，自然人），书式类型（中国大陆），申请人名称，身份证明文件号码
+            foreach (IHTMLElement item in elelist)
+            {
+                if (i < 3)
+                {
+                    continue;
+                }
+                if (i >= elelist.length - 15)
+                {
+                    break;
+                }
+                dic.Add(((item.children as IHTMLElementCollection).item(null, 0) as IHTMLElement).innerText, ((item.children as IHTMLElementCollection).item(null, 1) as IHTMLElement).innerText);
+            }
+            if (dic.Values.Contains("中国大陆"))
+            {
+                string regNum = "";
+                string applicantCategory = "";
+                string applicant = "";
+                string idCard = "";
+                dic.TryGetValue("申请号",out regNum);
+                dic.TryGetValue("申请人类型",out applicantCategory);
+                dic.TryGetValue("申请人名称", out applicant);
+                dic.TryGetValue("身份证明文件号码", out idCard);
+                CommonLibrary.CommonTool.GetResult(currentUrl+ string.Format("api/AutoReport/GetAddApplicantRegNum?regNum={0}&category={1}&applicant={2}&idCard={3}",regNum,applicantCategory,applicant,idCard));
+            }
+        }
+
+
+
+        /// <summary>
+        /// 弹出注册申请详细信息页面
+        /// </summary>
+        /// <param name="id"></param>
+        private void PopupItemWin(string id)
+        {
+            doc = webBrowser1.Document;
+            doc.InvokeScript("popUpWindowQm", new object[] { string.Format("/tmsve/sbzcsq_getSbzcDetail.xhtml?appid={0}&tablename=TTmoasAppTmzcAppform", id) });
         }
     }
 }

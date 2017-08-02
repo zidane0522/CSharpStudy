@@ -190,37 +190,47 @@ namespace AutoReportFrame
 
         private void GetInfoHtml()
         {
-            HtmlElementCollection tablelist = doc.GetElementsByTagName("table");
-            HtmlElement tableNode = tablelist[2];
-
-            HtmlElementCollection trlist = tableNode.GetElementsByTagName("tr");
-
-            if (dic == null)
+            try
             {
-                dic = new Dictionary<string, string>();
-            }
-            else
-            {
-                dic.Clear();
-            }
-
-            for (int i = 1; i < trlist.Count; i++)
-            {
-
-                HtmlElementCollection tdlist = trlist[i].GetElementsByTagName("td");
-                if (tdlist[6].InnerText.Trim() != "注册申请" || tdlist[8].InnerText.Trim() != "申请完成")
+                HtmlElementCollection tablelist = doc.GetElementsByTagName("table");
+                HtmlElement tableNode = tablelist[2];
+    
+                HtmlElementCollection trlist = tableNode.GetElementsByTagName("tr");
+         
+                if (dic == null)
                 {
-                    continue;
+                    dic = new Dictionary<string, string>();
                 }
-                string id = trlist[i].FirstChild.FirstChild.GetAttribute("id");
-                if (id == "")
+                else
                 {
-                    continue;
+                    dic.Clear();
                 }
-                PopupItemWin(id);
-                Thread.Sleep(2 * 1000);
-                dic.Add(tdlist[3].InnerText.Trim(), tdlist[5].InnerText.Trim());
+
+                for (int i = 1; i < trlist.Count; i++)
+                {
+ 
+                    HtmlElementCollection tdlist = trlist[i].GetElementsByTagName("td");
+                    if (tdlist[6].InnerText.Trim() != "注册申请" || tdlist[8].InnerText.Trim() != "申请完成")
+                    {
+                        continue;
+                    }
+                    string id = trlist[i].FirstChild.FirstChild.GetAttribute("id");
+                    if (id == "")
+                    {
+                        continue;
+                    }
+       
+                    PopupItemWin(id);
+         
+                    Thread.Sleep(2 * 1000);
+                    GetInfo();
+                }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            
         }
 
 
@@ -267,6 +277,7 @@ namespace AutoReportFrame
                 dic.TryGetValue("身份证明文件号码", out idCard);
                 CommonLibrary.CommonTool.GetResult(currentUrl+ string.Format("api/AutoReport/GetAddApplicantRegNum?regNum={0}&category={1}&applicant={2}&idCard={3}",regNum,applicantCategory,applicant,idCard));
             }
+            dddd.close();
         }
 
 

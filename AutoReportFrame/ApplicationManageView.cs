@@ -20,7 +20,7 @@ namespace AutoReportFrame
             InitializeComponent();
             //this.menu = menu;
             this.pin = "112233";
-            this.currentUrl = localUrl;
+            this.currentUrl = webUrl;
             this.webBrowser1.Url = new Uri("http://wssq.saic.gov.cn:9080/tmsve/");
             this.webBrowser1.DocumentCompleted += WebBrowser1_DocumentCompleted;
             this.FormClosing += ApplicationManageView_FormClosing;
@@ -87,6 +87,8 @@ namespace AutoReportFrame
 
         private Form menu;
         private string pin;
+
+        private List<string> SBJIdlist = new List<string>();
 
         /// <summary>
         /// 打开申请管理页面
@@ -178,14 +180,40 @@ namespace AutoReportFrame
         /// <param name="e"></param>
         private void button4_Click(object sender, EventArgs e)
         {
-            pageCount = int.Parse(doc.GetElementById("countpage").GetAttribute("value"));
-
-            for (int i = 0; i < pageCount; i++)
+            try
             {
-                GetInfoHtml();
-                doc.InvokeScript("dopage",new object[]{3});
-                Thread.Sleep(2000);
-            }          
+                SBJIdlist.Clear();
+                int i = 0;
+                while (true)
+                {
+                    int hasdata = 0;
+                    string resStr = CommonLibrary.CommonTool.GetResult(localUrl + "api/AutoReport/GetSBJTmInfoIDList?pageNo=" + i.ToString() + "&countPerPage=100");
+                    JObject res = JObject.Parse(resStr);
+                    if (res["hasdata"].ToString() == "0")
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        foreach (var item in res["data"])
+                        {
+                            this.SBJIdlist.Add(item.ToString());
+                        }
+                        foreach (var item in SBJIdlist)
+                        {
+                            this.webBrowser1.Navigate(string.Format("http://wssq.saic.gov.cn:9080/tmsve/sbzcsq_getSbzcDetail.xhtml?appid={0}&tablename=TTmoasAppTmzcAppform",item), false);
+                            Thread.Sleep(2 * 1000);
+                            GetInfo();
+                        }
+                    }
+                }
+                MessageBox.Show("信息抓取完毕");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+   
         }
 
         private void GetInfoHtml()
@@ -219,11 +247,12 @@ namespace AutoReportFrame
                     {
                         continue;
                     }
-       
+
                     PopupItemWin(id);
-         
+
                     Thread.Sleep(2 * 1000);
                     GetInfo();
+                    //CommonLibrary.CommonTool.GetResult(currentUrl + "api/AutoReport/GetAddSBJTmInfoID?id=" + id);
                 }
             }
             catch (Exception ex)
@@ -289,7 +318,26 @@ namespace AutoReportFrame
         private void PopupItemWin(string id)
         {
             doc = webBrowser1.Document;
-            doc.InvokeScript("popUpWindowQm", new object[] { string.Format("/tmsve/sbzcsq_getSbzcDetail.xhtml?appid={0}&tablename=TTmoasAppTmzcAppform", id) });
+            doc.InvokeScript("popUpWindowQm", new object[] { string.Format("http://wssq.saic.gov.cn:9080/tmsve/sbzcsq_getSbzcDetail.xhtml?appid={0}&tablename=TTmoasAppTmzcAppform", id) });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void preWork_btn_Click(object sender, EventArgs e)
+        {
+            pageCount = int.Parse(doc.GetElementById("countpage").GetAttribute("value"));//记录的总数
+
+            for (int i = 0; i < pageCount; i++)
+            {
+                GetInfoHtml();
+                doc.InvokeScript("dopage", new object[] { 3 });
+                Thread.Sleep(2000);
+            }
+
+            MessageBox.Show("准备完毕，可以开始抓取");
         }
     }
 }

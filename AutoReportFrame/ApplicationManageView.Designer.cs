@@ -29,17 +29,19 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
-            this.button4 = new System.Windows.Forms.Button();
+            this.startWork_btn = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.webBrowser1 = new System.Windows.Forms.WebBrowser();
+            this.preWork_btn = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.button4);
+            this.panel1.Controls.Add(this.preWork_btn);
+            this.panel1.Controls.Add(this.startWork_btn);
             this.panel1.Controls.Add(this.button3);
             this.panel1.Controls.Add(this.button2);
             this.panel1.Controls.Add(this.button1);
@@ -50,15 +52,15 @@
             this.panel1.Size = new System.Drawing.Size(934, 80);
             this.panel1.TabIndex = 0;
             // 
-            // button4
+            // startWork_btn
             // 
-            this.button4.Location = new System.Drawing.Point(719, 27);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(186, 25);
-            this.button4.TabIndex = 3;
-            this.button4.Text = "抓取所有申请信息";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.startWork_btn.Location = new System.Drawing.Point(785, 27);
+            this.startWork_btn.Name = "startWork_btn";
+            this.startWork_btn.Size = new System.Drawing.Size(120, 25);
+            this.startWork_btn.TabIndex = 3;
+            this.startWork_btn.Text = "开始抓取全部";
+            this.startWork_btn.UseVisualStyleBackColor = true;
+            this.startWork_btn.Click += new System.EventHandler(this.button4_Click);
             // 
             // button3
             // 
@@ -103,6 +105,16 @@
             this.webBrowser1.Size = new System.Drawing.Size(934, 368);
             this.webBrowser1.TabIndex = 1;
             // 
+            // preWork_btn
+            // 
+            this.preWork_btn.Location = new System.Drawing.Point(630, 27);
+            this.preWork_btn.Name = "preWork_btn";
+            this.preWork_btn.Size = new System.Drawing.Size(135, 25);
+            this.preWork_btn.TabIndex = 4;
+            this.preWork_btn.Text = "准备抓取全部";
+            this.preWork_btn.UseVisualStyleBackColor = true;
+            this.preWork_btn.Click += new System.EventHandler(this.preWork_btn_Click);
+            // 
             // ApplicationManageView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -126,6 +138,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.WebBrowser webBrowser1;
         private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button startWork_btn;
+        private System.Windows.Forms.Button preWork_btn;
     }
 }

@@ -40,6 +40,8 @@ namespace AutoReportFrame
 
         private bool unlogineed = true;
         private HtmlDocument doc;
+        private bool isSBJRegInfo = false;
+        private string currentId = "";
         private void WebBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
             if (unlogineed)
@@ -51,6 +53,35 @@ namespace AutoReportFrame
             else
             {
                 doc = webBrowser1.Document;
+                if (isSBJRegInfo)
+                {
+                    NewGetInfo();
+                    this.SBJIdlist.RemoveAt(0);
+                    if (SBJIdlist.Count>0)
+                    {
+                        this.webBrowser1.Navigate(string.Format("http://wssq.saic.gov.cn:9080/tmsve/sbzcsq_getSbzcDetail.xhtml?appid={0}&tablename=TTmoasAppTmzcAppform", SBJIdlist.First()), false);
+                    }
+                    else
+                    {
+                        if (Sum==0)
+                        {
+                            isSBJRegInfo = false;
+                            MessageBox.Show("over");
+                        }
+                        else
+                        {
+                            string resStr = CommonLibrary.CommonTool.GetResult(currentUrl + "api/AutoReport/GetSBJTmInfoIDList?pageNo=0&countPerPage=100");
+                            JObject res = JObject.Parse(resStr);
+
+                            foreach (var item in res["data"])
+                            {
+                                this.SBJIdlist.Add(item.ToString());
+                            }
+                            Sum = Sum - SBJIdlist.Count;
+                            this.webBrowser1.Navigate(string.Format("http://wssq.saic.gov.cn:9080/tmsve/sbzcsq_getSbzcDetail.xhtml?appid={0}&tablename=TTmoasAppTmzcAppform", SBJIdlist.First()), false);
+                        }
+                    }                    
+                }
             }
         }
 
@@ -172,7 +203,7 @@ namespace AutoReportFrame
         {
             this.webBrowser1.Navigate(@"file:///C:/Users/zidanepc/Desktop/suck.html");
         }
-
+        private int Sum = 0;
         /// <summary>
         /// 抓取所有信息
         /// </summary>
@@ -182,32 +213,25 @@ namespace AutoReportFrame
         {
             try
             {
+                this.webBrowser1.ScriptErrorsSuppressed = true;
                 SBJIdlist.Clear();
                 int i = 0;
-                while (true)
+                string countStr = CommonLibrary.CommonTool.GetResult(currentUrl + "api/AutoReport/GetSBJTmInfoIDCount");
+                Sum = int.Parse(JObject.Parse(countStr)["count"].ToString());
+                if (Sum>0)
                 {
-                    int hasdata = 0;
-                    string resStr = CommonLibrary.CommonTool.GetResult(localUrl + "api/AutoReport/GetSBJTmInfoIDList?pageNo=" + i.ToString() + "&countPerPage=100");
+                    string resStr = CommonLibrary.CommonTool.GetResult(currentUrl + "api/AutoReport/GetSBJTmInfoIDList?pageNo=" + i.ToString() + "&countPerPage=20");
                     JObject res = JObject.Parse(resStr);
-                    if (res["hasdata"].ToString() == "0")
+
+                    foreach (var item in res["data"])
                     {
-                        break;
+                        this.SBJIdlist.Add(item.ToString());
                     }
-                    else
-                    {
-                        foreach (var item in res["data"])
-                        {
-                            this.SBJIdlist.Add(item.ToString());
-                        }
-                        foreach (var item in SBJIdlist)
-                        {
-                            this.webBrowser1.Navigate(string.Format("http://wssq.saic.gov.cn:9080/tmsve/sbzcsq_getSbzcDetail.xhtml?appid={0}&tablename=TTmoasAppTmzcAppform",item), false);
-                            Thread.Sleep(2 * 1000);
-                            GetInfo();
-                        }
-                    }
+                    Sum = Sum - SBJIdlist.Count;
+                    this.webBrowser1.Navigate(string.Format("http://wssq.saic.gov.cn:9080/tmsve/sbzcsq_getSbzcDetail.xhtml?appid={0}&tablename=TTmoasAppTmzcAppform", SBJIdlist.First()), false);
+                    isSBJRegInfo = true;
+
                 }
-                MessageBox.Show("信息抓取完毕");
             }
             catch (Exception ex)
             {
@@ -242,17 +266,17 @@ namespace AutoReportFrame
                     {
                         continue;
                     }
-                    string id = trlist[i].FirstChild.FirstChild.GetAttribute("id");
+                    string id = trlist[i].FirstChild.FirstChild.GetAttribute("id").Substring(4);
                     if (id == "")
                     {
                         continue;
                     }
 
-                    PopupItemWin(id);
+                    //PopupItemWin(id);
 
-                    Thread.Sleep(2 * 1000);
-                    GetInfo();
-                    //CommonLibrary.CommonTool.GetResult(currentUrl + "api/AutoReport/GetAddSBJTmInfoID?id=" + id);
+                    //Thread.Sleep(2 * 1000);
+                    //GetInfo();
+                    CommonLibrary.CommonTool.GetResult(currentUrl + "api/AutoReport/GetAddSBJTmInfoID?id=" + id);
                 }
             }
             catch (Exception ex)
@@ -262,6 +286,44 @@ namespace AutoReportFrame
             
         }
 
+        private void NewGetInfo()
+        {
+            HtmlElementCollection elelist= doc.GetElementsByTagName("tr");
+            Dictionary<string, string> dic = new Dictionary<string, string>();
+            //int i = 0;//申请号，申请人类型（法人或其他组织，自然人），书式类型（中国大陆），申请人名称，身份证明文件号码
+            for (int i = 3; i < elelist.Count - 15; i++)
+            {
+                dic.Add(elelist[i].FirstChild.InnerText, elelist[i].Children[1].InnerText);
+            }
+            //foreach (HtmlElement item in elelist)
+            //{
+            //    if (i < 3)
+            //    {
+            //        continue;
+            //    }
+            //    if (i >= elelist.Count - 15)
+            //    {
+            //        break;
+            //    }
+                
+            //    dic.Add(item.FirstChild.InnerText,item.Children[1].InnerText);
+            //}
+
+
+            if (dic.Values.Contains("中国大陆 "))
+            {
+                string regNum = "";
+                string applicantCategory = "";
+                string applicant = "";
+                string idCard = "";
+                dic.TryGetValue("申请号 ", out regNum);
+                dic.TryGetValue("申请人类型 ", out applicantCategory);
+                dic.TryGetValue("申请人名称 ", out applicant);
+                dic.TryGetValue("身份证明文件号码 ", out idCard);
+                CommonLibrary.CommonTool.GetResult(currentUrl + string.Format("api/AutoReport/GetAddApplicantRegNum?regNum={0}&category={1}&applicant={2}&idCard={3}&id={4}", regNum.Trim(), applicantCategory.Trim(), applicant.Trim(),string.IsNullOrEmpty(idCard)?"":idCard.Trim(),this.SBJIdlist.First()));
+            }
+ 
+        }
 
         private void GetInfo()
         {
@@ -276,7 +338,7 @@ namespace AutoReportFrame
             {
                 MessageBox.Show("win is null");
             }
-            //HTMLWindow2Class dddd = doc.InvokeScript("sucdd") as HTMLWindow2Class;
+            HTMLWindow2Class dddd1 = doc.InvokeScript("sucdd") as HTMLWindow2Class;
             IHTMLWindow2 dddd = doc.InvokeScript("sucdd") as IHTMLWindow2;
             IHTMLDocument2 popupdoc = dddd.document;
             IHTMLElementCollection elelist = popupdoc.all.tags("tr") as IHTMLElementCollection;
@@ -304,7 +366,7 @@ namespace AutoReportFrame
                 dic.TryGetValue("申请人类型",out applicantCategory);
                 dic.TryGetValue("申请人名称", out applicant);
                 dic.TryGetValue("身份证明文件号码", out idCard);
-                CommonLibrary.CommonTool.GetResult(currentUrl+ string.Format("api/AutoReport/GetAddApplicantRegNum?regNum={0}&category={1}&applicant={2}&idCard={3}",regNum,applicantCategory,applicant,idCard));
+                CommonLibrary.CommonTool.GetResult(currentUrl+ string.Format("api/AutoReport/GetAddApplicantRegNum?regNum={0}&category={1}&applicant={2}&idCard={3}&id={4}", regNum,applicantCategory,applicant,idCard, currentId));
             }
             dddd.close();
         }
@@ -328,16 +390,70 @@ namespace AutoReportFrame
         /// <param name="e"></param>
         private void preWork_btn_Click(object sender, EventArgs e)
         {
-            pageCount = int.Parse(doc.GetElementById("countpage").GetAttribute("value"));//记录的总数
-
-            for (int i = 0; i < pageCount; i++)
+            try
             {
-                GetInfoHtml();
-                doc.InvokeScript("dopage", new object[] { 3 });
-                Thread.Sleep(2000);
+                pageCount = int.Parse(doc.GetElementById("countpage").GetAttribute("value"));//记录的总数
+
+                for (int i = 0; i < pageCount; i++)
+                {
+                    GetInfoHtml();
+                    doc.InvokeScript("dopage", new object[] { 3 });
+                    Thread.Sleep(5000);
+                }
+
+                //GetInfoHtml();
+                //doc.InvokeScript("dopage", new object[] { 3 });
+                //Thread.Sleep(2000);
+
+                MessageBox.Show("准备完毕，可以开始抓取");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
 
-            MessageBox.Show("准备完毕，可以开始抓取");
+        }
+
+        private void button4_Click_1(object sender, EventArgs e)
+        {
+            doc.InvokeScript("dopage", new object[] { 3 });
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                SBJIdlist.Clear();
+                int i = 0;
+                while (true)
+                {
+                    string resStr = CommonLibrary.CommonTool.GetResult(currentUrl + "api/AutoReport/GetSBJTmInfoIDList?pageNo=" + i.ToString() + "&countPerPage=100");
+                    JObject res = JObject.Parse(resStr);
+                    if (res["hasdata"].ToString() == "0")
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        foreach (var item in res["data"])
+                        {
+                            this.SBJIdlist.Add(item.ToString());
+                        }
+                        foreach (var item in SBJIdlist)
+                        {
+                            currentId = item;
+                            PopupItemWin(item);
+                            GetInfo();
+                        }
+                        break;
+                    }
+                }
+                MessageBox.Show("信息抓取完毕");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

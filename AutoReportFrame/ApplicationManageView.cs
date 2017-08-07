@@ -41,9 +41,11 @@ namespace AutoReportFrame
         private bool unlogineed = true;
         private HtmlDocument doc;
         private bool isSBJRegInfo = false;
+        private bool isSBJRegListInfo = false;
         private string currentId = "";
         private void WebBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
+            MessageBox.Show("com");
             if (unlogineed)
             {
                 doc = webBrowser1.Document;
@@ -53,17 +55,19 @@ namespace AutoReportFrame
             else
             {
                 doc = webBrowser1.Document;
+
+                #region 解析注册详细信息页面
                 if (isSBJRegInfo)
                 {
                     NewGetInfo();
                     this.SBJIdlist.RemoveAt(0);
-                    if (SBJIdlist.Count>0)
+                    if (SBJIdlist.Count > 0)
                     {
                         this.webBrowser1.Navigate(string.Format("http://wssq.saic.gov.cn:9080/tmsve/sbzcsq_getSbzcDetail.xhtml?appid={0}&tablename=TTmoasAppTmzcAppform", SBJIdlist.First()), false);
                     }
                     else
                     {
-                        if (Sum==0)
+                        if (Sum == 0)
                         {
                             isSBJRegInfo = false;
                             MessageBox.Show("over");
@@ -80,10 +84,37 @@ namespace AutoReportFrame
                             Sum = Sum - SBJIdlist.Count;
                             this.webBrowser1.Navigate(string.Format("http://wssq.saic.gov.cn:9080/tmsve/sbzcsq_getSbzcDetail.xhtml?appid={0}&tablename=TTmoasAppTmzcAppform", SBJIdlist.First()), false);
                         }
-                    }                    
+                    }
                 }
+                #endregion
+
+                #region 解析注册信息列表页面
+                if (isSBJRegListInfo == true)
+                {
+                    if (sbjListPar < 2)
+                    {
+                        sbjListPar++;
+                    }
+                    else
+                    {
+                        sbjListPar = 0;
+                        GetInfoHtml();
+                        pageCount--;
+                        if (pageCount > 0)
+                        {
+                            doc.InvokeScript("dopage", new object[] { 3 });
+                        }
+                        else
+                        {
+                            isSBJRegListInfo = false;
+                            MessageBox.Show("准备完成");
+                        }
+                    }
+                }
+                #endregion
             }
         }
+        private int sbjListPar = 0;
 
         private string currentUrl="";
 
@@ -393,19 +424,24 @@ namespace AutoReportFrame
             try
             {
                 pageCount = int.Parse(doc.GetElementById("countpage").GetAttribute("value"));//记录的总数
-
-                for (int i = 0; i < pageCount; i++)
+                isSBJRegListInfo = true;
+                GetInfoHtml();
+                pageCount--;
+                if (pageCount>0)
                 {
-                    GetInfoHtml();
                     doc.InvokeScript("dopage", new object[] { 3 });
-                    Thread.Sleep(5000);
                 }
+                else
+                {
+                    MessageBox.Show("准备完毕");
+                    isSBJRegListInfo = false;
+                }
+     
 
                 //GetInfoHtml();
                 //doc.InvokeScript("dopage", new object[] { 3 });
                 //Thread.Sleep(2000);
 
-                MessageBox.Show("准备完毕，可以开始抓取");
             }
             catch (Exception ex)
             {

@@ -90,10 +90,8 @@ namespace AutoReportFrame
                 #region 解析注册信息列表页面
                 if (isSBJRegListInfo == true)
                 {
-                    MessageBox.Show(sbjListPar.ToString());
                     if (sbjListPar < 1)
-                    {
-                        MessageBox.Show("a");
+                    {                  
                         sbjListPar++;
                     }
                     else
@@ -103,7 +101,6 @@ namespace AutoReportFrame
                         pageCount--;
                         if (pageCount > 0)
                         {
-                            MessageBox.Show("b");
                             doc.InvokeScript("dopage", new object[] { 3 });
                         }
                         else
@@ -253,7 +250,7 @@ namespace AutoReportFrame
                 Sum = int.Parse(JObject.Parse(countStr)["count"].ToString());
                 if (Sum>0)
                 {
-                    string resStr = CommonLibrary.CommonTool.GetResult(currentUrl + "api/AutoReport/GetSBJTmInfoIDList?pageNo=" + i.ToString() + "&countPerPage=20");
+                    string resStr = CommonLibrary.CommonTool.GetResult(currentUrl + "api/AutoReport/GetSBJTmInfoIDList?pageNo=" + i.ToString() + "&countPerPage=100");
                     JObject res = JObject.Parse(resStr);
 
                     foreach (var item in res["data"])
@@ -338,24 +335,23 @@ namespace AutoReportFrame
             //    {
             //        break;
             //    }
-                
+
             //    dic.Add(item.FirstChild.InnerText,item.Children[1].InnerText);
             //}
 
 
-            if (dic.Values.Contains("中国大陆 "))
-            {
-                string regNum = "";
-                string applicantCategory = "";
-                string applicant = "";
-                string idCard = "";
-                dic.TryGetValue("申请号 ", out regNum);
-                dic.TryGetValue("申请人类型 ", out applicantCategory);
-                dic.TryGetValue("申请人名称 ", out applicant);
-                dic.TryGetValue("身份证明文件号码 ", out idCard);
-                CommonLibrary.CommonTool.GetResult(currentUrl + string.Format("api/AutoReport/GetAddApplicantRegNum?regNum={0}&category={1}&applicant={2}&idCard={3}&id={4}", regNum.Trim(), applicantCategory.Trim(), applicant.Trim(),string.IsNullOrEmpty(idCard)?"":idCard.Trim(),this.SBJIdlist.First()));
-            }
- 
+            string regNum = "";
+            string applicantCategory = "";
+            string applicant = "";
+            string idCard = "";
+            string region = "";
+            dic.TryGetValue("申请号 ", out regNum);
+            dic.TryGetValue("申请人类型 ", out applicantCategory);
+            dic.TryGetValue("申请人名称 ", out applicant);
+            dic.TryGetValue("身份证明文件号码 ", out idCard);
+            dic.TryGetValue("书式类型 ", out region);
+            CommonLibrary.CommonTool.GetResult(currentUrl + string.Format("api/AutoReport/GetAddApplicantRegNum?regNum={0}&category={1}&applicant={2}&idCard={3}&id={4}&region={5}", regNum.Trim(), applicantCategory.Trim(), applicant.Trim(), string.IsNullOrEmpty(idCard) ? "" : idCard.Trim(), this.SBJIdlist.First(), region.Trim()));
+
         }
 
         private void GetInfo()

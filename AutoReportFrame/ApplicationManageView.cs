@@ -45,7 +45,6 @@ namespace AutoReportFrame
         private string currentId = "";
         private void WebBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
-            MessageBox.Show("com");
             if (unlogineed)
             {
                 doc = webBrowser1.Document;
@@ -70,7 +69,7 @@ namespace AutoReportFrame
                         if (Sum == 0)
                         {
                             isSBJRegInfo = false;
-                            MessageBox.Show("over");
+                            MessageBox.Show("完成");
                         }
                         else
                         {
@@ -91,8 +90,10 @@ namespace AutoReportFrame
                 #region 解析注册信息列表页面
                 if (isSBJRegListInfo == true)
                 {
-                    if (sbjListPar < 2)
+                    MessageBox.Show(sbjListPar.ToString());
+                    if (sbjListPar < 1)
                     {
+                        MessageBox.Show("a");
                         sbjListPar++;
                     }
                     else
@@ -102,6 +103,7 @@ namespace AutoReportFrame
                         pageCount--;
                         if (pageCount > 0)
                         {
+                            MessageBox.Show("b");
                             doc.InvokeScript("dopage", new object[] { 3 });
                         }
                         else

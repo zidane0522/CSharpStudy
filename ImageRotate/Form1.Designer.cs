@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.Base64ToImg_btn = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
@@ -38,6 +39,7 @@
             this.newImgBox = new System.Windows.Forms.PictureBox();
             this.orgImgBox = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.ImgToBase64_Btn = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.newImgBox)).BeginInit();
@@ -47,6 +49,8 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.ImgToBase64_Btn);
+            this.panel1.Controls.Add(this.Base64ToImg_btn);
             this.panel1.Controls.Add(this.button5);
             this.panel1.Controls.Add(this.button4);
             this.panel1.Controls.Add(this.button3);
@@ -57,6 +61,16 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1535, 80);
             this.panel1.TabIndex = 2;
+            // 
+            // Base64ToImg_btn
+            // 
+            this.Base64ToImg_btn.Location = new System.Drawing.Point(498, 12);
+            this.Base64ToImg_btn.Name = "Base64ToImg_btn";
+            this.Base64ToImg_btn.Size = new System.Drawing.Size(130, 23);
+            this.Base64ToImg_btn.TabIndex = 5;
+            this.Base64ToImg_btn.Text = "Base64ToImg";
+            this.Base64ToImg_btn.UseVisualStyleBackColor = true;
+            this.Base64ToImg_btn.Click += new System.EventHandler(this.Base64ToImg_btn_Click);
             // 
             // button5
             // 
@@ -153,6 +167,15 @@
             this.pictureBox1.TabIndex = 2;
             this.pictureBox1.TabStop = false;
             // 
+            // ImgToBase64_Btn
+            // 
+            this.ImgToBase64_Btn.Location = new System.Drawing.Point(648, 12);
+            this.ImgToBase64_Btn.Name = "ImgToBase64_Btn";
+            this.ImgToBase64_Btn.Size = new System.Drawing.Size(114, 23);
+            this.ImgToBase64_Btn.TabIndex = 6;
+            this.ImgToBase64_Btn.Text = "ImgToBase64";
+            this.ImgToBase64_Btn.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -183,6 +206,8 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button Base64ToImg_btn;
+        private System.Windows.Forms.Button ImgToBase64_Btn;
     }
 }
 

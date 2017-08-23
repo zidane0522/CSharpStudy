@@ -5,6 +5,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -98,6 +99,64 @@ namespace ImageRotate
             if (sfd.ShowDialog() == DialogResult.OK)
             {
                 this.pictureBox1.Image.Save(sfd.FileName, ImageFormat.Jpeg);
+            }
+        }
+
+        private void Base64ToImg_btn_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.Multiselect = true;
+            dlg.Title = "选择要转换的base64编码的文本";
+            dlg.Filter = "txt files|*.txt";
+            if (DialogResult.OK == dlg.ShowDialog())
+            {
+                for (int i = 0; i < dlg.FileNames.Length; i++)
+                {
+                    Base64StringToImage(dlg.FileNames[i].ToString());
+                }
+
+            }
+        }
+        public string ImageToBase64(Image imageIn)
+        {
+            MemoryStream ms = new MemoryStream();
+            imageIn.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+            byte[] arr = new byte[ms.Length];
+            ms.Position = 0;
+            ms.Read(arr, 0, (int)ms.Length);
+            ms.Close();
+            return Convert.ToBase64String(arr);
+        }
+        //base64编码的文本 转为    图片
+        private void Base64StringToImage(string txtFileName)
+        {
+            try
+            {
+                FileStream ifs = new FileStream(txtFileName, FileMode.Open, FileAccess.Read);
+                StreamReader sr = new StreamReader(ifs);
+
+                String inputStr = sr.ReadToEnd();
+                byte[] arr = Convert.FromBase64String(inputStr);
+                MemoryStream ms = new MemoryStream(arr);
+                Bitmap bmp = new Bitmap(ms);
+
+                //bmp.Save(txtFileName + ".jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+                //bmp.Save(txtFileName + ".bmp", ImageFormat.Bmp);
+                //bmp.Save(txtFileName + ".gif", ImageFormat.Gif);
+                //bmp.Save(txtFileName + ".png", ImageFormat.Png);
+                ms.Close();
+                sr.Close();
+                ifs.Close();
+                this.pictureBox1.Image = bmp;
+                if (File.Exists(txtFileName))
+                {
+                    File.Delete(txtFileName);
+                }
+                //MessageBox.Show("转换成功！");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Base64StringToImage 转换失败\nException：" + ex.Message);
             }
         }
     }

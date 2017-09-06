@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Office.Interop.Excel;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -116,6 +117,32 @@ namespace WordObjLearning
             Console.WriteLine(path + "创建完毕！");
         }
 
+        private void button4_Click(object sender, EventArgs e)
+        {
+            //Microsoft.Office.Interop.Excel.Application app = new Microsoft.Office.Interop.Excel.Application();
+            //Workbooks wbks = app.Workbooks;
+            //_Workbook _wbk = wbks.Add(true);
+            //Sheets shs = _wbk.Sheets;
+            //_Worksheet _wsh = (_Worksheet)shs.get_Item(1);
+            //_wsh.Name = "顺丰等待执行快递单";
 
+            ////添加行
+            //((Range)_wsh.Rows[2, Missing.Value]).Insert(Missing.Value, XlInsertFormatOrigin.xlFormatFromLeftOrAbove);
+
+            ////添加列
+            ////_wsh.get_Range(_wsh.Cells[1, 1], _wsh.Cells[_wsh.Rows.Count, 1]).Insert(Missing.Value, XlInsertShiftDirection.xlShiftToRight);
+            //app.AlertBeforeOverwriting = false;
+            //if (File.Exists(@"D:\neweck.xls"))
+            //{
+            //    File.Delete(@"D:\neweck.xls");
+            //}
+            //_wsh.SaveAs(@"D:\neweck.xls", Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value);
+
+            ExcelHelper ExcelHelper = new WordObjLearning.ExcelHelper();
+            string[,] dataarray =  { {"a","a","a" }, { "b", "b", "b" }, { "c", "c", "c" } };
+            ExcelHelper.ArrayToExcel(dataarray,1,1);
+            ExcelHelper.OutputFilePath = @"D:\ad.xls";
+            ExcelHelper.SaveAsFile();
+        }
     }
 }

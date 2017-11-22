@@ -1,4 +1,5 @@
 ﻿using Microsoft.Office.Interop.Excel;
+using NPOI.HSSF.UserModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,6 +12,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Word = Microsoft.Office.Interop.Word;
+using Spire.Doc;
+using Spire.Doc.Fields;
 
 namespace WordObjLearning
 {
@@ -138,11 +141,129 @@ namespace WordObjLearning
             //}
             //_wsh.SaveAs(@"D:\neweck.xls", Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value);
 
-            ExcelHelper ExcelHelper = new WordObjLearning.ExcelHelper();
-            string[,] dataarray =  { {"a","a","a" }, { "b", "b", "b" }, { "c", "c", "c" } };
-            ExcelHelper.ArrayToExcel(dataarray,1,1);
-            ExcelHelper.OutputFilePath = @"D:\ad.xls";
-            ExcelHelper.SaveAsFile();
+            //ExcelHelper ExcelHelper = new WordObjLearning.ExcelHelper();
+            //string[,] dataarray =  { {"a","a","a" }, { "b", "b", "b" }, { "c", "c", "c" } };
+            //ExcelHelper.ArrayToExcel(dataarray,1,1);
+            //ExcelHelper.OutputFilePath = @"D:\ad.xls";
+            //ExcelHelper.SaveAsFile();
+
+
+        }
+
+        private void NPOI_OutputExcel(string writefilePath)
+        {
+            NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
+            NPOI.SS.UserModel.ISheet sheet = book.CreateSheet("test_01");
+
+            // 第一列
+            NPOI.SS.UserModel.IRow row = sheet.CreateRow(0);
+            row.CreateCell(0).SetCellValue("第一列第一行");
+
+            // 第二列
+            NPOI.SS.UserModel.IRow row2 = sheet.CreateRow(1);
+            row2.CreateCell(0).SetCellValue("第二列第一行");
+
+            // ...
+
+            using (System.IO.MemoryStream ms=new MemoryStream())
+            {
+                book.Write(ms);
+                using (FileStream fs = new FileStream(writefilePath, FileMode.Create, FileAccess.Write))
+                {
+                    byte[] data = ms.ToArray();
+                    fs.Write(data, 0, data.Length);
+                    fs.Flush();
+                }
+                book = null;
+            }
+
+        }
+
+        private void NPOI_InputExcel(string readfilePath)
+        {
+            HSSFWorkbook hssfworkbook;
+            #region//初始化信息  
+            try
+            {
+                using (FileStream file = new FileStream(readfilePath, FileMode.Open, FileAccess.Read))
+                {
+                    hssfworkbook = new HSSFWorkbook(file);
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            #endregion
+
+            NPOI.SS.UserModel.ISheet sheet = hssfworkbook.GetSheetAt(0);
+            System.Collections.IEnumerator rows = sheet.GetRowEnumerator();
+
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void TestSpireWord_Click(object sender, EventArgs e)
+        {
+            //tmName
+            //ictm
+            //regNum
+            //year
+            //month
+            //day
+
+            string tmName = "tmName";
+            string ictm = "56";
+            string regNum = "regNum";
+            string year = "2000";
+            string month = "12";
+            string day = "11";
+
+            try
+            {
+                using (Document doc = new Document(@"C:\Users\Administrator\Desktop\驳回复审模板\商标评审案件申请材料目录模板.docx"))
+                {
+                    //清除表单阴影
+                    doc.Properties.FormFieldShading = false;
+                    foreach (FormField field in doc.Sections[0].Body.FormFields)
+                    {
+                        switch (field.Name)
+                        {
+                            case "tmName":
+                                field.Text = tmName;
+                                break;
+                            case "ictm":
+                                field.Text = ictm;
+                                break;
+                            case "regNum":
+                                field.Text = regNum;
+                                break;
+                            case "nian":
+                                field.Text = year;
+                                break;
+                            case "yue":
+                                field.Text = month;
+                                break;
+                            case "ri":
+                                field.Text = day;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
+                    doc.SaveToFile(@"C:\Users\Administrator\Desktop\驳回复审文件\商标评审案件申请材料目录文件.doc");
+                }
+                
+                MessageBox.Show("保存成功");
+            }
+            catch (Exception ex)
+            {
+            }
+            
         }
     }
 }

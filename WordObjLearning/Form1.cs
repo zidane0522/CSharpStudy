@@ -18,6 +18,7 @@ using System.Net.Http;
 using System.Net;
 using System.Web;
 using Newtonsoft.Json.Linq;
+using Spire.Doc.Documents;
 
 namespace WordObjLearning
 {
@@ -207,7 +208,7 @@ namespace WordObjLearning
 
         private void button5_Click(object sender, EventArgs e)
         {
-
+            Spire_doc_Table();
         }
 
         private void TestSpireWord_Click(object sender, EventArgs e)
@@ -268,6 +269,161 @@ namespace WordObjLearning
             {
             }
             
+        }
+
+        private void Spire_doc_Table()
+        {
+            Document document = new Document(@"D:\SpireTableTest.docx", FileFormat.Auto);
+            using (document)
+            {
+                int sectionCount = document.Sections.Count;
+                System.Data.DataTable datable = new System.Data.DataTable();
+
+                for (int i = 0; i < 5; i++)
+                {
+                    DataColumn dc = new DataColumn();
+                    using (dc)
+                    {
+                        dc.ColumnName = "第" + i.ToString() + "列";
+                        dc.Caption = "第" + i.ToString() + "列";
+                        datable.Columns.Add(dc);
+                    }
+                }
+
+                for (int i = 0; i < 3; i++)
+                {
+                    DataRow dr = datable.NewRow();
+                    dr.ItemArray = new object[] { "haha", 1, 123456, 12.00, "AAAAA发的萨芬" };
+                    datable.Rows.Add(dr);
+                }
+
+                addTable(document.Sections[2], datable);
+                document.SaveToFile(@"D:\demo.doc", FileFormat.Doc);
+            }
+        }
+
+        //private void addTable(Section section, List<>)
+        //{
+        //    Table table = section.AddTable();
+        //    int rowCount = dataTable.Rows.Count;
+        //    int columnCount = dataTable.Columns.Count;
+        //    table.DefaultRowHeight = 25;
+        //    table.DefaultColumnWidth = 0;
+        //    table.ResetCells(rowCount + 1, columnCount);
+
+        //    TableRow headerRow = table.Rows[0];
+        //    headerRow.IsHeader = true;
+
+        //    for (int c = 0; c < columnCount; c++)
+        //    {
+        //        Paragraph p = headerRow.Cells[c].AddParagraph();
+        //        p.Format.HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment.Center;
+
+        //        Spire.Doc.Fields.TextRange headerText = p.AppendText(dataTable.Columns[c].ColumnName);
+        //        headerText.CharacterFormat.Bold = true;
+
+
+        //        Spire.Doc.Formatting.CellFormat cellStyle = headerRow.Cells[c].CellFormat;
+        //        cellStyle.VerticalAlignment = VerticalAlignment.Middle;
+        //    }
+
+        //    for (int i = 0; i < rowCount; i++)
+        //    {
+        //        object[] rowContent = dataTable.Rows[i].ItemArray;
+        //        DataRow row = dataTable.Rows[i];
+
+        //        for (int j = 0; j < columnCount; j++)
+        //        {
+        //            Paragraph p = table.Rows[i + 1].Cells[j].AddParagraph();
+
+        //            if (rowContent[j] is byte[])
+        //            {
+        //                p.Format.HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment.Center;
+        //                p.AppendPicture(rowContent[j] as byte[]);
+        //            }
+        //            else
+        //            {
+        //                p.AppendText(rowContent[j].ToString());
+        //            }
+
+        //            Spire.Doc.Formatting.CellFormat cellStyle = table.Rows[i + 1].Cells[j].CellFormat;
+        //            cellStyle.VerticalAlignment = VerticalAlignment.Middle;
+        //        }
+        //    }
+        //}
+
+        private void addTable(Section section, System.Data.DataTable dataTable)
+        {
+            Table table = section.AddTable();
+            int rowCount = dataTable.Rows.Count;
+            int columnCount = dataTable.Columns.Count;
+            table.DefaultRowHeight = 25;
+            table.DefaultColumnWidth = 0;
+            table.ResetCells(rowCount + 1, columnCount);
+
+            table.TableFormat.Borders.Left.BorderType
+                = Spire.Doc.Documents.BorderStyle.Hairline;
+            table.TableFormat.Borders.Left.Color = Color.Black;
+
+            table.TableFormat.Borders.Top.BorderType
+                = Spire.Doc.Documents.BorderStyle.Hairline;
+            table.TableFormat.Borders.Top.Color = Color.Black;
+            table.TableFormat.Borders.Right.BorderType
+                = Spire.Doc.Documents.BorderStyle.Hairline;
+            table.TableFormat.Borders.Right.Color = Color.Black;
+
+            table.TableFormat.Borders.Bottom.BorderType
+                = Spire.Doc.Documents.BorderStyle.Hairline;
+            table.TableFormat.Borders.Bottom.Color = Color.Black;
+
+            table.TableFormat.Borders.Horizontal.BorderType
+                = Spire.Doc.Documents.BorderStyle.Hairline;
+            table.TableFormat.Borders.Horizontal.Color = Color.Black;
+
+
+            table.TableFormat.Borders.Vertical.BorderType
+                = Spire.Doc.Documents.BorderStyle.Hairline;
+            table.TableFormat.Borders.Vertical.Color = Color.Black;
+
+            TableRow headerRow = table.Rows[0];
+            headerRow.IsHeader = true;
+
+            for (int c = 0; c < columnCount; c++)
+            {
+                Paragraph p = headerRow.Cells[c].AddParagraph();
+                p.Format.HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment.Center;
+
+                Spire.Doc.Fields.TextRange headerText = p.AppendText(dataTable.Columns[c].ColumnName);
+                headerText.CharacterFormat.Bold = true;
+
+
+                Spire.Doc.Formatting.CellFormat cellStyle = headerRow.Cells[c].CellFormat;
+                cellStyle.VerticalAlignment = VerticalAlignment.Middle;
+            }
+
+            for (int i = 0; i < rowCount; i++)
+            {
+                object[] rowContent = dataTable.Rows[i].ItemArray;
+                DataRow row = dataTable.Rows[i];
+
+                for (int j = 0; j < columnCount; j++)
+                {
+                    Paragraph p = table.Rows[i + 1].Cells[j].AddParagraph();
+
+                    if (rowContent[j] is byte[])
+                    {
+                        p.Format.HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment.Center;
+                        p.AppendPicture(rowContent[j] as byte[]);
+                    }
+                    else
+                    {
+                        p.AppendText(rowContent[j].ToString());
+                    }
+
+                    Spire.Doc.Formatting.CellFormat cellStyle = table.Rows[i + 1].Cells[j].CellFormat;
+                    cellStyle.VerticalAlignment = VerticalAlignment.Middle;
+                }
+            }
         }
 
         private void button6_Click(object sender, EventArgs e)

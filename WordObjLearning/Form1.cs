@@ -483,5 +483,14 @@ namespace WordObjLearning
         }
 
 
+        /// <summary>
+        /// 从pdf中提取图片
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button7_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
